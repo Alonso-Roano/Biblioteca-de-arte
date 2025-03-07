@@ -23,6 +23,10 @@ Nuestro proyecto busca abordar esta problemática mediante el desarrollo de una 
 - Correo: joelrodriguez128@gmail.com
 - Usuario de git: joelrod12
 
+### Suarez Vargas Mauricio Saul
+- Correo: mauricio.suv@gmail.com
+- Usuario de git: SirMauricio
+
 ## Dependencias
 
 ### Dependencias principales
