@@ -1,5 +1,9 @@
 # Biblioteca-de-arte
 Repositorio del proyecto de seguridad 
+## Integrantes
+### Sánchez Roano Carlos Alonso
+- Correo: carlosroano201@gmail.com
+- Usuario de git: Alonso-Roano
 
 ## Pasos para hacer un commit correctamente
 
@@ -66,7 +70,6 @@ Los administradores revisarán tu código y podrán solicitar cambios antes de f
 - Usa commits descriptivos y concisos.
 - Asegúrate de actualizar tu `main` antes de crear nuevas ramas:
   ```sh
-  git checkout main
   git pull origin main
   
 
