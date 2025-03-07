@@ -11,6 +11,10 @@ Nuestro proyecto busca abordar esta problemática mediante el desarrollo de una 
 - Correo: carlosroano201@gmail.com
 - Usuario de git: Alonso-Roano
 
+### Alexis Daniel Dolores Ramirez
+- Correo: alexisdanieldr@gmail.com
+- Usuario de git: Maxxired
+
 ## Dependencias
 
 ### Dependencias principales
