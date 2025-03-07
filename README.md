@@ -15,6 +15,10 @@ Nuestro proyecto busca abordar esta problemática mediante el desarrollo de una 
 - Correo: alexisdanieldr@gmail.com
 - Usuario de git: Maxxired
 
+### Gómez Segura Andrea
+- Correo: angomezs.123@gmail.com
+- Usuario de git: Goraz
+
 ## Dependencias
 
 ### Dependencias principales
