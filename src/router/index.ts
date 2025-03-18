@@ -10,6 +10,7 @@ import DashboardEtiquetas from '@/views/Dashboard/DashboardEtiquetas.vue'
 import DashboardLikes from '@/views/Dashboard/DashboardLikes.vue'
 import DashboardProfile from '@/views/Dashboard/DashboardProfile.vue'
 import ErrorPage404 from '@/views/Errors/ErrorPage404.vue'
+import GalleryView from '@/views/GalleryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,12 @@ const router = createRouter({
       name: 'home',
       meta: { menu: true, title: 'Inicio' },
       component: HomeView
+    },
+    {
+      path: '/galeria',
+      name: 'galeria',
+      meta: { menu: true, title: 'Galeria' },
+      component: GalleryView
     },
     {
       path: '/login',
