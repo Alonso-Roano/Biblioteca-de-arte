@@ -12,6 +12,7 @@ import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
 import router from '@/router'
 import IconArrow from '../icons/IconArrow.vue'
+import Cookies from "js-cookie";
 
 const authStore = useAuthStore()
 const isAuth = ref(false)
@@ -35,9 +36,8 @@ onMounted(() => {
 })
 const Logout = () => {
   toggleMenu()
-  localStorage.removeItem('accessToken')
-  localStorage.removeItem('refreshToken')
-  localStorage.removeItem('user')
+  Cookies.remove("token");
+  Cookies.remove("refreshToken");
   location.reload()
   router.push({ name: 'home' })
 }
