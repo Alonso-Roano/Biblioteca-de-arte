@@ -11,6 +11,7 @@ import DashboardLikes from '@/views/Dashboard/DashboardLikes.vue'
 import DashboardProfile from '@/views/Dashboard/DashboardProfile.vue'
 import ErrorPage404 from '@/views/Errors/ErrorPage404.vue'
 import GalleryView from '@/views/GalleryView.vue'
+import DetalleProducto from '../views/DetalleProducto.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,12 @@ const router = createRouter({
       name: 'login',
       meta: { menu: true, title: 'Login' },
       component: LoginView
+    },
+    {
+      path: '/DetalleProducto',
+      name: 'Detalle de producto',
+      meta: { menu: true, title: 'Detalle de producto' },
+      component: DetalleProducto
     },
     {
       path: '/register',
