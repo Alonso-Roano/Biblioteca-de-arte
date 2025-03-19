@@ -8,15 +8,18 @@ import Cristo from '@/assets/images/cristoredentor.webp'
 const authStore = useAuthStore();
 const router = useRouter();
 const errorMessage = ref<null | string>(null);
-const username = ref('');
+const nombres = ref('');
+const apellidos = ref('');
 const email = ref('');
-const alias = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 const showPassword = ref(false);
+const showPasswordConfirm = ref(false);
+const artista = ref(false);
 
 const onSubmit = async () => {
   try {
-    await authStore.register( username.value, email.value, alias.value, password.value );
+    await authStore.register( nombres.value,apellidos.value, email.value, password.value, confirmPassword.value, artista.value );
     errorMessage.value = null;
     router.push('/login');
   } catch (error) {
@@ -52,23 +55,22 @@ const onSubmit = async () => {
             </label>
             <input
               id="username"
-              v-model="username"
+              v-model="nombres"
               type="text"
               class="w-full border-b border-gray-300 focus:border-[#F4811B] focus:outline-none py-2 text-gray-700"
               placeholder="Tu nombre de usuario"
             />
           </div>
-
           <div>
-            <label for="alias" class="block text-gray-600 text-sm font-medium mb-1">
-              Alias (opcional)
+            <label for="username" class="block text-gray-600 text-sm font-medium mb-1">
+              Apellidos de Usuario
             </label>
             <input
-              id="alias"
-              v-model="alias"
+              id="username"
+              v-model="apellidos"
               type="text"
               class="w-full border-b border-gray-300 focus:border-[#F4811B] focus:outline-none py-2 text-gray-700"
-              placeholder="Ej. tu apodo o nickname"
+              placeholder="Tu nombre de usuario"
             />
           </div>
 
@@ -110,6 +112,36 @@ const onSubmit = async () => {
             </div>
           </div>
 
+          <div>
+            <label for="password" class="block text-gray-600 text-sm font-medium mb-1">
+              Confirmar Contraseña
+            </label>
+            <div class="relative">
+              <input
+                :type="showPasswordConfirm ? 'text' : 'password'"
+                id="password"
+                v-model="confirmPassword"
+                class="w-full border-b border-gray-300 focus:border-[#F4811B] focus:outline-none py-2 text-gray-700 pr-10"
+                placeholder="********"
+              />
+              <button
+                type="button"
+                @click="showPasswordConfirm = !showPasswordConfirm"
+                class="absolute right-0 top-1/2 -translate-y-1/2 mr-1 text-gray-500"
+              >
+                <Icon
+                  :icon="showPasswordConfirm ? 'bi:eye-slash-fill' : 'bi:eye-fill'"
+                  class="text-xl"
+                />
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <input id="artista" v-model="artista" type="checkbox" class="mr-2" />
+            <label for="artista" class="text-gray-600 text-sm font-medium">
+              Registrarse como artista
+            </label>
+          </div>
           <button
             type="submit"
             class="w-full bg-[#F4811B] hover:bg-[#d77315] text-white font-bold py-2 rounded-full transition-colors"
