@@ -17,6 +17,7 @@ import LikeView from '@/views/LikeView.vue'
 import EditarLibroView from '@/views/EditarLibroView.vue'
 import LibrosCreadosView from '@/views/LibrosCreadosView.vue'
 import CrearLibroView from '@/views/CrearLibroView.vue'
+import ObraColor from '@/views/ObraColor.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,7 @@ const router = createRouter({
     { path: '/register', name: 'register', component: RegisterView },
     { path: '/images', name: 'images', component: ImagesView, meta: { requiresAuth: true } },
     { path: '/libros', name: 'libros', component: BooksView, meta: { requiresAuth: true } },
+    { path: '/obras', name: 'obras', component: ObraColor, meta: { requiresAuth: true } },
     { path: '/libro/:slug', name: 'libro-detalle', component: BookDetailView, props: true, meta: { requiresAuth: true } },
     { path: '/perfil', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
     { path: '/likes', name: 'likes', component: LikeView, meta: { requiresAuth: true } },
