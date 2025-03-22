@@ -44,7 +44,8 @@ const toast = ref()
 
 const fetchUsers = async () => {
   try {
-    Users.value = await apiRequest("usuario.listar")
+    const users = <any>await apiRequest("usuario.listar")
+    Users.value = users.data; 
   } catch (error) {
     console.log(error)
   } 

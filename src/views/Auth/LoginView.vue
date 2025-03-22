@@ -99,7 +99,7 @@ const onSubmit = async () => {
         <img
           :src="Cristo"
           alt="Imagen Login"
-          class="w-[90%] h-auto object-cover rounded-lg shadow-md"
+          class="w-[90%] h-max-[500px] object-cover rounded-lg shadow-md"
         />
       </div>
     </div>

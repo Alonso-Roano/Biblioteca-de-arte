@@ -5,6 +5,7 @@ import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 import { Icon } from "@iconify/vue"
+import Cookies from "js-cookie";
 
 interface Libro {
   id: number;
@@ -55,7 +56,7 @@ const cargarLikes = async () => {
 const toggleLike = async () => {
   if (!libro.value) return;
   try {
-    await apiRequest("like.toggle", { libroId: libro.value.id, token: localStorage.getItem("token") });
+    await apiRequest("like.toggle", { libroId: libro.value.id, token: Cookies.get("token") });
     await cargarLikes(); 
   } catch (error) {
     console.error("Error al dar/quitar like:", error);

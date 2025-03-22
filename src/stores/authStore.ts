@@ -5,6 +5,7 @@ import type { AxiosResponse } from "axios";
 import type User from "../interfaces/User";
 import endpoints from "@/api/endpoints";
 import { apiRequest } from "@/api/apiClient";
+import Cookies from "js-cookie";
 
 interface AuthState {
   status: "unauthorized" | "pending" | "authorized";
@@ -16,8 +17,8 @@ interface AuthState {
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
     status: "unauthorized",
-    token: localStorage.getItem("token") || null,
-    refreshToken: localStorage.getItem("refreshToken") || null,
+    token: Cookies.get("token") || null,
+    refreshToken: Cookies.get("refreshToken") || null,
     user: null,
   }),
 
@@ -34,7 +35,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async initializeAuth() {
-      const token = this.token || localStorage.getItem("token");
+      const token = this.token || Cookies.get("token");
       if (token) {
         this.status = "authorized";
         this.setUserFromToken(token); 
@@ -58,15 +59,15 @@ export const useAuthStore = defineStore("auth", {
       };
     },
 
-    async login(username: string, password: string) {
+    async login(email: string, password: string) {
       this.status = "pending";
       try {
-        const credentials = { username, password };
+        const credentials = { email, password };
         const response: any = await apiRequest("auth.login", {}, credentials);
 
-        if (response.accessToken && response.refreshToken && response.user) {
-          this.setTokens(response.accessToken, response.refreshToken);
-          this.setUserFromToken(response.accessToken);
+        if (response.token && response.refreshToken && response.user) {
+          this.setTokens(response.token, response.refreshToken);
+          this.setUserFromToken(response.token);
           this.status = "authorized";
         } else {
           throw new Error(response.message || "Credenciales incorrectas");
@@ -83,15 +84,15 @@ export const useAuthStore = defineStore("auth", {
     setTokens(token: string, refreshToken: string) {
       this.token = token;
       this.refreshToken = refreshToken;
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
+      Cookies.set("token", token, { secure: true, sameSite: "Strict" });
+      Cookies.set("refreshToken", refreshToken, { secure: true, sameSite: "Strict" });
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
 
     async refreshTokenAsync() {
       try {
         const response: AxiosResponse = await axios.post(import.meta.env.VITE_APP_URL+"api/Auth/refresh", {
-          refreshToken: localStorage.getItem("refreshToken"),
+          refreshToken: Cookies.get("refreshToken"),
         });
         if (response.data.accessToken && response.data.refreshToken) {
           this.setTokens(response.data.accessToken, response.data.refreshToken);
@@ -107,18 +108,14 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
-      const token = localStorage.getItem("token");
-      const refreshToken = localStorage.getItem("refreshToken");
-    
-      if (token && refreshToken) {
+      if (Cookies.get("token") && Cookies.get("refreshToken")) {
         this.token = null;
         this.refreshToken = null;
         this.user = null;
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
+        Cookies.remove("token");
+        Cookies.remove("refreshToken");
         delete axios.defaults.headers.common["Authorization"];
         this.status = "unauthorized";
-    
         window.location.reload();
       } else {
         console.log("No se encontraron tokens, no es necesario hacer logout.");
@@ -157,18 +154,20 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async register(username: string, email: string, alias: string, password: string) {
+    async register(nombres: string, apellidos: string, email: string, password: string, confirmPassword:string, artista:boolean = false ) {
       this.status = "pending";
       try {
-        const response: any = await apiRequest("auth.register", {}, {
+        const response: any = await apiRequest(artista ? "auth.registerArtist":"auth.registerUser", {}, {
+          id:"0",
           email,
-          username,
-          alias,
+          nombres,
+          apellidos,
           password,
+          confirmPassword
         });
-        if (response.accessToken && response.refreshToken) {
-          this.setTokens(response.accessToken, response.refreshToken);
-          this.setUserFromToken(response.accessToken);
+        if (response.token && response.refreshToken) {
+          this.setTokens(response.token, response.refreshToken);
+          this.setUserFromToken(response.token);
           this.status = "authorized";
         } else {
           throw new Error("Error en el registro del cliente.");
