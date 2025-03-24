@@ -7,11 +7,14 @@ const img = ref<Array<{ imagenUrl: string; titulo: string }>>([]);
 
 const fetchObras = async () => {
   try {
-    img.value = await apiRequest("obra.listar");
+    const response = await apiRequest("obra.listar");
+    img.value = response?.data ?? [];
   } catch (error) {
     console.error("Error al obtener las obras:", error);
   }
 };
+
+
 
 onMounted(fetchObras);
 
