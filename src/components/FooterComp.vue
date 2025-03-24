@@ -5,32 +5,7 @@ import { Icon } from "@iconify/vue";
 <template>
   <footer class="footer-clean bg-[#F4811B] text-white py-10">
     <div class="container mx-auto px-6 w-full flex flex-col items-center">
-      
 
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full place-items-center">
-
-        <div class="item flex flex-col items-center text-center">
-          <h3 class="text-lg font-semibold mb-2">LOGIN</h3>
-          <ul class="flex flex-col items-center">
-            <h3 class="text-lg font-semibold mb-2">HOME</h3>
-          </ul>
-        </div>
-
-        <div class="item flex flex-col items-center text-center">
-          <h3 class="text-lg font-semibold mb-2">GALERIA</h3>
-          <ul class="flex flex-col items-center">
-            <h3 class="text-lg font-semibold mb-2">COTIZACIÓN</h3>
-          </ul>
-        </div>
-
-        <div class="item flex flex-col items-center text-center">
-          <h3 class="text-lg font-semibold mb-2">PRODUCTO</h3>
-          <ul class="flex flex-col items-center">
-            <h3 class="text-lg font-semibold mb-2">CARRITO</h3>
-          </ul>
-        </div>
-
-      </div>
 
       <div class="flex justify-center mt-6">
         <div class="flex space-x-4">
@@ -42,7 +17,7 @@ import { Icon } from "@iconify/vue";
       </div>
 
       <p class="text-sm text-center mt-4">&copy; 2025 Galería™. Todos los derechos reservados.</p>
-      
+
     </div>
   </footer>
 </template>
