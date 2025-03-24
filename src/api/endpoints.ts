@@ -37,7 +37,15 @@ const endpoints = {
         crear: { method: "POST", url: "/api/Usuario" },
         actualizar: { method: "PUT", url: "/api/Usuario/{id}" },
         eliminar: { method: "DELETE", url: "/api/Usuario/{id}" },
-    }
+    },
+    galeria: {
+        listar: { method: "GET", url: "/api/Galeria" },
+        obtener: { method: "GET", url: "/api/Galeria/{id}" },
+        crear: { method: "POST", url: "/api/Galeria" },
+        actualizar: { method: "PUT", url: "/api/Galeria/{id}" },
+        eliminar: { method: "DELETE", url: "/api/Galeria/{id}" },
+    },
+    
 };
 
 export default endpoints;
