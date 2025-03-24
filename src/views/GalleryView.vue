@@ -45,7 +45,7 @@ const sections = computed(() => {
     </div>
 
     <div class="flex flex-col items-center px-6 relative">
-      <!-- Aquí empezamos con el grid -->
+      <!-- Grid de las secciones de imágenes -->
       <div v-for="(section, sectionIndex) in sections" :key="sectionIndex" :class="{
         'grid grid-cols-1 sm:grid-cols-2 gap-30 z-10': section.length === 2,
         'grid grid-cols-1 gap-6 z-10': section.length === 1,
@@ -55,7 +55,7 @@ const sections = computed(() => {
         <!-- Cada imagen de la sección -->
         <div v-for="(image, index) in section" :key="index" class="relative group overflow-hidden rounded-xl p-4">
           <img :src="image.imagenUrl" :alt="image.titulo"
-            class="w-full h-[500px] object-cover transition-transform transform group-hover:scale-105">
+            class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover transition-transform transform group-hover:scale-105">
           <div
             class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
             <span class="text-white text-lg font-semibold">{{ image.titulo }}</span>
@@ -74,6 +74,3 @@ const sections = computed(() => {
     </div>
   </div>
 </template>
-
-
-
