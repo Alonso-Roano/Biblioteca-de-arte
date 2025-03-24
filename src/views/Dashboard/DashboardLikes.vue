@@ -8,20 +8,15 @@ import { apiRequest } from '@/api/apiClient'
 import { Icon } from "@iconify/vue"
 
 const showModalView = ref(false)
-const likes = ref([]) 
+const likes = <any>ref([]) 
 const loading = ref(true)
 const libroIdView = ref<number | null>(null)
 const confirmDeleteModal = ref(false)
 
 const toast = ref()
 
-const getLibroTitulo = (libroId: number) => {
-  const libro = likes.value?.find((like: any) => like.libroId === libroId)
-  return libro ? libro.tituloLibro : undefined
-}
-
 const getUsuariosQueDieronLike = (libroId: number) => {
-  const libro = likes.value?.find(like => like.libroId === libroId)
+  const libro = likes.value?.find((like:any) => like.libroId === libroId)
   return libro ? libro.usuariosQueDieronLike.join(', ') : '' 
 }
 
@@ -76,8 +71,8 @@ const deleteAllLikes = async () => {
         <!-- Tabla de Likes -->
         <DataTable :value="likes" tableStyle="min-width: 50rem" paginator :rows="5"
           :rowsPerPageOptions="[5, 10, 20, 50]">
-          <Column field="tituloLibro" header="Título del Libro"></Column>
-          <Column field="totalLikes" header="Total Likes"></Column>
+          <Column field="tituloLibro" header="Título de la obra"></Column>
+          <Column field="totalLikes" header="Total de Likes"></Column>
           <Column header="Usuarios que dieron Like">
             <template #body="props">
               <span class="block">

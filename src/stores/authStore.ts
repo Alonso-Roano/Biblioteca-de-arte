@@ -84,26 +84,27 @@ export const useAuthStore = defineStore("auth", {
     setTokens(token: string, refreshToken: string) {
       this.token = token;
       this.refreshToken = refreshToken;
+      localStorage.setItem("refreshToken", refreshToken);
       Cookies.set("token", token, { secure: true, sameSite: "Strict" });
       Cookies.set("refreshToken", refreshToken, { secure: true, sameSite: "Strict" });
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
 
     async refreshTokenAsync() {
+      console.log(localStorage.getItem("refreshToken"))
+      const sendToken = localStorage.getItem("refreshToken");
       try {
         const response: AxiosResponse = await axios.post(import.meta.env.VITE_APP_URL+"api/Auth/refresh", {
-          refreshToken: Cookies.get("refreshToken"),
+          token: sendToken,
         });
         if (response.data.accessToken && response.data.refreshToken) {
           this.setTokens(response.data.accessToken, response.data.refreshToken);
           this.setUserFromToken(response.data.accessToken);
         } else {
           console.error("Error al refrescar el token, respuesta incompleta.");
-          this.logout();
         }
       } catch (error) {
         console.error("Error refrescando token", error);
-        this.logout();
       }
     },
 
@@ -113,6 +114,7 @@ export const useAuthStore = defineStore("auth", {
         this.refreshToken = null;
         this.user = null;
         Cookies.remove("token");
+        localStorage.removeItem("refreshToken")
         Cookies.remove("refreshToken");
         delete axios.defaults.headers.common["Authorization"];
         this.status = "unauthorized";

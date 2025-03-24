@@ -20,6 +20,7 @@ const nuevoComentario = ref({
 
 // Obtener producto y comentarios desde la API Galeria
 const obtenerProducto = async () => {
+  console.log(route.params.id)
   try {
     const { data } = await axios.get<Galeria>(`http://localhost:3000/api/galeria/${route.params.id}`)
     producto.value = data
@@ -60,8 +61,8 @@ onMounted(obtenerProducto)
   <div class="min-h-screen flex flex-col items-center bg-[#F6EDD9] p-6">
     <!-- Título -->
     <header class="w-full max-w-6xl text-center mb-8">
-      <h1 class="font-montserrat text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">{{ producto.nombre }}</h1>
-      <p class="text-lg sm:text-xl text-gray-600 mt-2">{{ producto.categoria }}</p>
+      <h1 class="font-montserrat text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">{{ producto?.nombre }}</h1>
+      <p class="text-lg sm:text-xl text-gray-600 mt-2">{{ producto?.categoria }}</p>
     </header>
 
     <!-- Contenedor Principal -->
@@ -69,8 +70,8 @@ onMounted(obtenerProducto)
       <!-- Imagen del producto  -->
       <div class="w-full sm:w-1/2 h-full">
         <img
-          :src="producto.imagen"
-          :alt="producto.nombre"
+          :src="producto?.imagen"
+          :alt="producto?.nombre"
           class="w-full h-full object-cover shadow-right"
         />
       </div>
@@ -86,14 +87,14 @@ onMounted(obtenerProducto)
                 :class="leGusta ? 'text-red-500' : 'text-gray-400'" />
         </button>
 
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">{{ producto.nombre }}</h2>
-        <span class="text-2xl sm:text-3xl font-bold text-[#F4811B]">${{ producto.precio.toFixed(2) }}</span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">{{ producto?.nombre }}</h2>
+        <span class="text-2xl sm:text-3xl font-bold text-[#F4811B]">${{ producto?.precio.toFixed(2) }}</span>
         <p class="text-lg sm:text-xl text-gray-600 mt-4 leading-relaxed">
-          {{ producto.descripcion }}
+          {{ producto?.descripcion }}
         </p>
 
         <div class="mt-6">
-          <p class="text-lg sm:text-xl font-semibold text-gray-500 mt-2">Stock disponible: {{ producto.stock }}</p>
+          <p class="text-lg sm:text-xl font-semibold text-gray-500 mt-2">Stock disponible: {{ producto?.stock }}</p>
         </div>
 
         <div class="flex mt-8 gap-6">
