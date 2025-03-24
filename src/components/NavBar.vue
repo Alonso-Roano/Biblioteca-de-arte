@@ -1,5 +1,6 @@
 <template>
   <!-- Barra de navegación -->
+  <Toast/>
   <nav class="w-screen bg-[#EEE9DF] border-gray-200">
     <div class="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
       <!-- Nombre de la página actual -->
@@ -53,19 +54,19 @@
         </div>
 
         <button
-          v-if="!user" 
+          v-if="!user"
           class="px-4 py-2 border border-gray-400 text-gray-700 rounded hover:bg-gray-100"
-          @click="MenuOpen = false"
+          @click="handlelogin"
         >
            Iniciar Sesíon
         </button>
 
         <button
-          v-if="user" 
+          v-if="user"
           class="px-4 py-2 border border-gray-400 text-gray-700 rounded hover:bg-gray-100"
-          @click="MenuOpen = false"
+          @click="handleLogout"
         >
-           Cerrar Sesion
+          Cerrar Sesión
         </button>
 
         <div class="text-sm md:text-base text-gray-700">
@@ -85,10 +86,13 @@
 </template>
 
 <script setup lang="ts">
+
 import { ref, computed, watch } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 import { useRouter, useRoute } from 'vue-router'
 import NavRoutes from '@/components/NavRoutes.vue'
+import { useToast } from 'primevue/usetoast'
+const toast = useToast()
 
 const authStore = useAuthStore()
 authStore.initializeAuth()
@@ -114,6 +118,30 @@ const menuRoutes = computed(() => {
     (r) => r.meta?.menu && !r.redirect
   )
 })
+
+const handleLogout = () => {
+  logout()
+  MenuOpen.value = false
+}
+
+const handlelogin = () => {
+  router.push('/login')
+  MenuOpen.value = false
+}
+
+const logout = () => {
+  authStore.logout()
+  user.value = null
+
+  toast.add({
+    severity: 'info',
+    summary: 'Sesión cerrada',
+    detail: 'Has cerrado sesión exitosamente.',
+    life: 3000
+  })
+
+}
+
 
 watch(() => route.path, () => {
   MenuOpen.value = false
