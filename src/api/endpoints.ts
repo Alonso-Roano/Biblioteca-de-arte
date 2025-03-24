@@ -34,10 +34,35 @@ const endpoints = {
     },
     usuario: {
         listar: { method: "GET", url: "/api/Persona" },
+        filtrar: { method: "GET", url: "/api/Persona/filter" },
         obtener: { method: "GET", url: "/api/Usuario/{id}" },
         crear: { method: "POST", url: "/api/Usuario" },
-        actualizar: { method: "PUT", url: "/api/Usuario/{id}" },
-        eliminar: { method: "DELETE", url: "/api/Usuario/{id}" },
+        actualizar: { method: "PUT", url: "/api/Persona/ActualizarPerfilUsuario/{id}" },
+        eliminar: { method: "DELETE", url: "/api/Persona/{id}" },
+    },
+    artista: {
+        listar: { method: "GET", url: "/api/Artista" },
+        filtrar: { method: "GET", url: "/api/Artista/filter" },
+        obtener: { method: "GET", url: "/api/Artista/{id}" },
+        crear: { method: "POST", url: "/api/Artista" },
+        actualizar: { method: "PUT", url: "/api/Artista/ActualizarPerfilArtista/{id}" },
+        eliminar: { method: "DELETE", url: "/api/Artista/{id}" },
+    },
+    logAction: {
+        listar: { method: "GET", url: "/api/LogAction" },
+        filtrar: { method: "GET", url: "/api/LogAction/filter" },
+        obtener: { method: "GET", url: "/api/LogAction/{id}" },
+        crear: { method: "POST", url: "/api/LogAction" },
+        actualizar: { method: "PUT", url: "/api/LogAction/{id}" },
+        eliminar: { method: "DELETE", url: "/api/LogAction/{id}" },
+    },
+    logError: {
+        listar: { method: "GET", url: "/api/LogError" },
+        filtrar: { method: "GET", url: "/api/LogError/filter" },
+        obtener: { method: "GET", url: "/api/LogError/{id}" },
+        crear: { method: "POST", url: "/api/LogError" },
+        actualizar: { method: "PUT", url: "/api/LogError/{id}" },
+        eliminar: { method: "DELETE", url: "/api/LogError/{id}" },
     }
 };
 
