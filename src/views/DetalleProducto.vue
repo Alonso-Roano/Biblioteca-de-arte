@@ -1,34 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
-import Desastre from '../assets/images/PinturaDeMuestra1.jpg'
-import '../assets/fonts.css' 
-
+import { Galeria } from '@/interfaces/Galeria' 
+import axios from 'axios'
 
 const route = useRoute()
 const router = useRouter()
 
-// Datos simulados del producto, reemplazar en un futuro por los parámetros de la API del producto a traer
-const producto = ref({
-  id: route.params.id, //Id del producto
-  nombre: 'Desastre virtuoso',
-  descripcion: 'Pintura hecha por un artista independiente.',
-  precio: 300.00,
-  imagen: Desastre, // Referencia a la pintura
-  categoria: 'Pintura',
-  stock: 1,
+const producto = ref<Galeria | null>(null)
+const comentarios = ref<Galeria['comentarios']>([])
+const leGusta = ref(false)
+
+const nuevoComentario = ref({
+  texto: '',
+  usuario: 'Usuario Anónimo',
+  fecha: new Date().toLocaleDateString(),
 })
 
-// Estado de comentarios y "Me gusta"
-const nuevoComentario = ref({ texto: '', usuario: 'Usuario Anónimo', fecha: new Date().toLocaleDateString() })
-const comentarios = ref<any[]>([
-  { texto: '¡Increíble pintura! Me encanta la mezcla de colores.', usuario: 'MauSuv', fecha: '2025-03-17' },
-  { texto: 'El arte tiene una gran carga emocional, muy buen trabajo.', usuario: 'Balltze', fecha: '2025-03-16' },
-])
-const leGusta = ref(false) // Estado para definir de "Me gusta"
+// Obtener producto y comentarios desde la API Galeria
+const obtenerProducto = async () => {
+  console.log(route.params.id)
+  try {
+    const { data } = await axios.get<Galeria>(`http://localhost:3000/api/galeria/${route.params.id}`)
+    producto.value = data
+    comentarios.value = data.comentarios
+  } catch (error) {
+    console.error('Error al obtener datos del producto:', error)
+  }
+}
 
-// Función toogle para alternar "Me gusta"
+// Función toogle para "Me gusta"
 const toggleMeGusta = () => {
   leGusta.value = !leGusta.value
 }
@@ -45,18 +47,22 @@ const enviarComentario = () => {
   }
 }
 
-// Ruta para volver a la tienda
+// Volver a la tienda
 const regresar = () => {
   router.push('/')
 }
+
+// Obtener los datos al cargar el componente
+onMounted(obtenerProducto)
 </script>
+
 
 <template>
   <div class="min-h-screen flex flex-col items-center bg-[#F6EDD9] p-6">
     <!-- Título -->
     <header class="w-full max-w-6xl text-center mb-8">
-      <h1 class="font-montserrat text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">{{ producto.nombre }}</h1>
-      <p class="text-lg sm:text-xl text-gray-600 mt-2">{{ producto.categoria }}</p>
+      <h1 class="font-montserrat text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">{{ producto?.nombre }}</h1>
+      <p class="text-lg sm:text-xl text-gray-600 mt-2">{{ producto?.categoria }}</p>
     </header>
 
     <!-- Contenedor Principal -->
@@ -64,8 +70,8 @@ const regresar = () => {
       <!-- Imagen del producto  -->
       <div class="w-full sm:w-1/2 h-full">
         <img
-          :src="producto.imagen"
-          :alt="producto.nombre"
+          :src="producto?.imagen"
+          :alt="producto?.nombre"
           class="w-full h-full object-cover shadow-right"
         />
       </div>
@@ -81,14 +87,14 @@ const regresar = () => {
                 :class="leGusta ? 'text-red-500' : 'text-gray-400'" />
         </button>
 
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">{{ producto.nombre }}</h2>
-        <span class="text-2xl sm:text-3xl font-bold text-[#F4811B]">${{ producto.precio.toFixed(2) }}</span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">{{ producto?.nombre }}</h2>
+        <span class="text-2xl sm:text-3xl font-bold text-[#F4811B]">${{ producto?.precio.toFixed(2) }}</span>
         <p class="text-lg sm:text-xl text-gray-600 mt-4 leading-relaxed">
-          {{ producto.descripcion }}
+          {{ producto?.descripcion }}
         </p>
 
         <div class="mt-6">
-          <p class="text-lg sm:text-xl font-semibold text-gray-500 mt-2">Stock disponible: {{ producto.stock }}</p>
+          <p class="text-lg sm:text-xl font-semibold text-gray-500 mt-2">Stock disponible: {{ producto?.stock }}</p>
         </div>
 
         <div class="flex mt-8 gap-6">
