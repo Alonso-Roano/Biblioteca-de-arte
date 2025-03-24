@@ -26,7 +26,7 @@ export const useAuthStore = defineStore("auth", {
     isTokenExpired(token: string): boolean {
       try {
         const decoded: any = jwtDecode(token);
-        const currentTime = Math.floor(Date.now() / 1000); 
+        const currentTime = Math.floor(Date.now() / 1000);
         return decoded.exp < currentTime;
       } catch (e) {
         console.error("Error al decodificar el token", e);
@@ -38,7 +38,7 @@ export const useAuthStore = defineStore("auth", {
       const token = this.token || Cookies.get("token");
       if (token) {
         this.status = "authorized";
-        this.setUserFromToken(token); 
+        this.setUserFromToken(token);
       } else {
         this.status = "unauthorized";
         this.logout();
@@ -115,12 +115,14 @@ export const useAuthStore = defineStore("auth", {
         Cookies.remove("refreshToken");
         delete axios.defaults.headers.common["Authorization"];
         this.status = "unauthorized";
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
       } else {
         console.log("No se encontraron tokens, no es necesario hacer logout.");
       }
     },
-    
+
     async updateUser(updatedUser: Partial<User>) {
       if (this.user) {
         const updatedData = {
@@ -130,7 +132,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = updatedData;
       }
     },
-    
+
     async refreshUserData() {
       if (!this.user?.id) {
         console.error("No hay usuario autenticado.");

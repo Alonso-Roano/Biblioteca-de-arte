@@ -98,4 +98,4 @@ const endpoints = {
     
 };
 
-export default endpoints;
+export default endpoints
