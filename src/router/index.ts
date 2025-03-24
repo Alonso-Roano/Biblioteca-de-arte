@@ -12,7 +12,10 @@ import DashboardProfile from '@/views/Dashboard/DashboardProfile.vue'
 import ErrorPage404 from '@/views/Errors/ErrorPage404.vue'
 import GalleryView from '@/views/GalleryView.vue'
 import DetalleProducto from '../views/DetalleProducto.vue'
-import RegisterArtistView from '@/views/Auth/RegisterArtistView.vue'
+//import RegisterArtistView from '@/views/Auth/RegisterArtistView.vue'
+import RegisterArtistView from '@/views/Auth/RegisterView.vue'
+import ProfileView from '@/views/Auth/Profile/ProfileView.vue'
+import ProfileArtist from '@/views/Auth/Profile/ProfileArtist.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,13 +48,25 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       meta: { menu: false, title: 'Register' },
-      component: RegisterView 
+      component: RegisterView
     },
     {
       path: '/registerArtist',
       name: 'registerArtist',
       meta: { menu: false, title: 'RegisterArtist' },
-      component: RegisterArtistView 
+      component: RegisterArtistView
+    },
+    {
+      path: '/myprofile',
+      name: 'myprofile',
+      meta: { menu: true, title: 'Mi perfil' },
+      component: ProfileView
+    },
+    {
+      path: '/myprofileArtist',
+      name: 'myprofileArtist',
+      meta: { menu: true, title: 'Mi perfil de Artista' },
+      component: ProfileArtist
     },
     {
       path: '/dashboard',

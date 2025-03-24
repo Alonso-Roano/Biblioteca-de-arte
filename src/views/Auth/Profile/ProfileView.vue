@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useProfileStore } from '@/stores/ProfileStore'
+import { useProfileStore } from '@/stores/ProfileStore.ts'
 import { useToast } from 'primevue/usetoast'
 
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
-import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
+import LikeList from '@/views/Auth/Profile/components/LikeList.vue'
 
 const tabs = ['Editar Perfil', 'Mis Likes', 'Mis Comentarios']
 const currentTab = ref('Editar Perfil')
@@ -18,10 +18,18 @@ const toast = useToast()
 const nombre = ref('')
 const apellido = ref('')
 const edad = ref<number | null>(null)
+const nuevaContraseña = ref('')
+
 
 
 onMounted(() => {
   profileStore.fetchProfile()
+})
+
+watch(currentTab, (tab) => {
+if (tab === 'Mis Comentarios') {
+    profileStore.fetchUserComments()
+  }
 })
 
 watch(
@@ -31,6 +39,7 @@ watch(
       nombre.value = perfil.nombres
       apellido.value = perfil.apellidos
       edad.value = perfil.edad
+
     }
   },
   { immediate: true },
@@ -57,6 +66,7 @@ const guardarCambios = async () => {
       nombres: nombre.value,
       apellidos: apellido.value,
       edad: edad.value!,
+      ...(nuevaContraseña.value ? { contraseña: nuevaContraseña.value } : {}),
     })
 
     toast.add({
@@ -115,6 +125,16 @@ const guardarCambios = async () => {
                 <InputNumber v-model="edad" class="w-full" inputStyle="width: 100%" />
               </div>
 
+              <div>
+                <label class="block text-sm font-medium mb-1">Nueva Contraseña</label>
+                <InputText
+                  v-model="nuevaContraseña"
+                  type="password"
+                  class="w-full"
+                  placeholder="Escribe tu nueva contraseña"
+                />
+              </div>
+
               <Button
                 type="submit"
                 label="Guardar Cambios"
@@ -125,14 +145,32 @@ const guardarCambios = async () => {
           </div>
 
           <div v-else-if="currentTab === 'Mis Likes'">
-            <h2 class="text-lg font-semibold mb-4">Mis Likes</h2>
-            <p>No has dado like a nada todavía</p>
+            <LikeList/>
           </div>
 
           <div v-else-if="currentTab === 'Mis Comentarios'">
             <h2 class="text-lg font-semibold mb-4">Mis Comentarios</h2>
-            <p>No has comentado aún</p>
+
+            <div v-if="profileStore.userComments.length === 0">
+              <p>No has comentado aún </p>
+            </div>
+
+            <ul v-else class="space-y-4">
+              <li
+                v-for="comentario in profileStore.userComments"
+                :key="comentario.id"
+                class="p-4 bg-gray-100 rounded-lg shadow-sm"
+              >
+                <p class="text-sm text-gray-700 mb-1">
+                  {{ comentario.texto }}
+                </p>
+                <p class="text-xs text-gray-500">
+                  Fecha: {{ new Date(comentario.fechaComentario).toLocaleDateString() }}
+                </p>
+              </li>
+            </ul>
           </div>
+
         </div>
       </div>
     </div>

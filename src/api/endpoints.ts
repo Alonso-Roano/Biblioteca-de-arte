@@ -47,6 +47,29 @@ const endpoints = {
     actualizar: { method: 'PUT', url: '/api/Persona/ActualizarPerfilUsuario/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Usuario/{id}' },
   },
+  artista: {
+    listar: { method: 'GET', url: '/api/Artista' },
+    obtener: { method: 'GET', url: '/api/Artista/ObtenerDatosPerfil/{id}' },
+    crear: { method: 'POST', url: '/api/Artista' },
+    actualizar: { method: 'PUT', url: '/api/Artista/{id}' },
+    eliminar: { method: 'DELETE', url: '/api/Artista/{id}'},
+  },
+  exposicion:{
+    listar: { method: 'GET', url: '/api/Exposicion' },
+    obtener: { method: 'GET', url: '/api/Exposicion/{id}' },
+    crear: { method: 'POST', url: '/api/Exposicion' },
+    actualizar: { method: 'PUT', url: '/api/Exposicion/{id}' },
+    eliminar: { method: 'DELETE', url: '/api/Exposicion/{id}' },
+    filtrar: { method: 'GET', url: '/api/Exposicion/filter' },
+  },
+  obra: {
+    listar: { method: 'GET', url: '/api/Obra' },
+    obtener: { method: 'GET', url: '/api/Obra/{id}' },
+    crear: { method: 'POST', url: '/api/Obra' },
+    actualizar: { method: 'PUT', url: '/api/Obra/{id}' },
+    eliminar: { method: 'DELETE', url: '/api/Obra/{id}' },
+    filtrar: { method: 'GET', url: '/api/Obra/filter' },
+  },
 }
 
 export default endpoints
