@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../stores/authStore.ts';
+import { useAuthStore } from '@/stores/authStore.ts';
 import { Icon } from "@iconify/vue";
 import Cristo from '@/assets/images/cristoredentor.webp'
 
@@ -18,7 +18,7 @@ const onSubmit = async () => {
   try {
     await authStore.register( username.value, email.value, alias.value, password.value );
     errorMessage.value = null;
-    router.push('/login');
+    await router.push('/login');
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : 'Ocurrió un error inesperado.';
   }
