@@ -71,6 +71,30 @@ const endpoints = {
         actualizar: { method: "PUT", url: "/api/Galeria/{id}" },
         eliminar: { method: "DELETE", url: "/api/Galeria/{id}" },
     },
+    exposicion: {
+        listar: { method: "GET", url: "/api/Exposicion" },
+        obtener: { method: "GET", url: "/api/Exposicion/{id}" },
+        filtrar: { method: "GET", url: "/api/Exposicion/filter" },
+        crear: { method: "POST", url: "/api/Exposicion" },
+        actualizar: { method: "PUT", url: "/api/Exposicion/{id}" },
+        eliminar: { method: "DELETE", url: "/api/Exposicion/{id}" },
+    },
+    categoria: {
+        listar: { method: "GET", url: "/api/Categoria" },
+        obtener: { method: "GET", url: "/api/Categoria/{id}" },
+        filtrar: { method: "GET", url: "/api/Categoria/filter" },
+        crear: { method: "POST", url: "/api/Categoria" },
+        actualizar: { method: "PUT", url: "/api/Categoria/{id}" },
+        eliminar: { method: "DELETE", url: "/api/Categoria/{id}" },
+    },
+    obra: {
+        listar: { method: "GET", url: "/api/Obra" },
+        obtener: { method: "GET", url: "/api/Obra/{id}" },
+        filtrar: { method: "GET", url: "/api/Obra/filter" },
+        crear: { method: "POST", url: "/api/Obra" },
+        actualizar: { method: "PUT", url: "/api/Obra/{id}" },
+        eliminar: { method: "DELETE", url: "/api/Obra/{id}" },
+    },
     
 };
 

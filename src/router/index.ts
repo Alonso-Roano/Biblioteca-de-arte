@@ -5,7 +5,7 @@ import RegisterView from '@/views/Auth/RegisterView.vue'
 import Dashboard from '@/views/Dashboard/Dashboard.vue'
 import DashboardUsers from '@/views/Dashboard/DashboardUsers.vue'
 import DashboardLibros from '@/views/Dashboard/DashboardLibros.vue'
-import DashboardEtiquetas from '@/views/Dashboard/DashboardEtiquetas.vue'
+import DashboardEtiquetas from '@/views/Dashboard/DashboardCategoria.vue'
 //import { useAuthStore } from "@/stores/authStore";
 import DashboardLikes from '@/views/Dashboard/DashboardLikes.vue'
 import DashboardProfile from '@/views/Dashboard/DashboardProfile.vue'
@@ -15,6 +15,8 @@ import DetalleProducto from '../views/DetalleProducto.vue'
 import DashboardArtists from '@/views/Dashboard/DashboardArtists.vue'
 import DashboardLogAction from '@/views/Dashboard/DashboardLogAction.vue'
 import DashboardLogError from '@/views/Dashboard/DashboardLogError.vue'
+import DashboardExposicion from '@/views/Dashboard/DashboardExposicion.vue'
+import DashboardObra from '@/views/Dashboard/DashboardObra.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,14 +82,20 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/dashboard/libros',
-      name: 'dashboard-libros',
-      component: DashboardLibros,
+      path: '/dashboard/exposicion',
+      name: 'dashboard-exposicion',
+      component: DashboardExposicion,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/dashboard/etiquetas',
-      name: 'dashboard-etiquetas',
+      path: '/dashboard/obra',
+      name: 'dashboard-obra',
+      component: DashboardObra,
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/dashboard/categoria',
+      name: 'dashboard-categoria',
       component: DashboardEtiquetas,
       meta: { requiresAuth: true, requiresAdmin: true },
     },
