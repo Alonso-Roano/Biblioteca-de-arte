@@ -1,20 +1,22 @@
 <template>
-  <div class="flex flex-col md:flex-row items-center gap-2 bg-white p-4 shadow-md w-full md:w-full mx-auto">
-    <label for="searchType" class="text-purple-700 font-semibold">Buscar por:</label>
+  <div class="w-full max-w-4xl mx-auto my-6 bg-[#EDE7DD] p-6 flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+    <label for="searchType" class="text-gray-800 font-semibold w-full sm:w-auto text-center sm:text-left">
+      Buscar por:
+    </label>
 
-    <select v-model="searchType" id="searchType" class="border border-gray-400 rounded-md p-2 text-gray-700">
+    <select v-model="searchType" id="searchType"
+      class="border border-gray-400 rounded-xl p-3 text-gray-800 bg-white shadow-sm focus:ring-2 focus:ring-[#C25500] outline-none w-full sm:w-auto">
       <option value="todos">Todos</option>
-      <option value="titulo">Titulo</option>
+      <option value="titulo">Título</option>
       <option value="autor">Autor</option>
       <option value="etiqueta">Género</option>
     </select>
 
-    <input v-model="searchQuery" type="text" placeholder="Escribe aquí..." class="border border-gray-400 rounded-md p-2 flex-grow text-gray-700">
+    <input v-model="searchQuery" type="text" placeholder="Escribe aquí..."
+      class="border border-gray-400 rounded-xl p-3 text-gray-800 bg-white shadow-sm focus:ring-2 focus:ring-[#C25500] outline-none w-full flex-grow">
 
-    <a
-      :href="searchUrl"
-      class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-orange-600 transition"
-    >
+    <a :href="searchUrl"
+      class="bg-[#C25500] text-white font-semibold px-5 py-3 rounded-xl hover:bg-[#A04400] transition shadow-md hover:shadow-lg w-full sm:w-auto text-center">
       Buscar
     </a>
   </div>
@@ -42,16 +44,3 @@ defineOptions({
   name: 'SearchComponent',
 });
 </script>
-
-<style scoped>
-div {
-  background-color: #fefcff;
-}
-select, input {
-  background-color: #ffffff;
-}
-a {
-  background-color: #f59f01;
-  text-align: center;
-}
-</style>
