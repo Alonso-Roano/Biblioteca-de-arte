@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import Search from '@/components/Search.vue';
 
 const img = [
   { src: '/src/assets/images/Desert.png', alt: 'Desert' },
@@ -40,11 +41,15 @@ const sections = computed(() => {
 
 <template>
   <div class="bg-[#EDE7DD] min-h-screen">
-    <h1 class="flex flex-col items-center py-10 px-6 text-5xl font-extrabold text-gray-900 mb-12 tracking-wide">
+    <h1 class="flex flex-col items-center py-10 px-6 text-5xl font-extrabold text-gray-900 tracking-wide">
       GALERIA
     </h1>
+    <div class="w-full max-w-4xl mx-auto my-6">
 
-    <div class="flex flex-col items-center py-10 px-6 relative">
+    <Search/>
+    </div>
+
+    <div class="flex flex-col items-center  px-6 relative">
       <div v-for="(section, sectionIndex) in sections" :key="sectionIndex" :class="{
         'grid grid-cols-1 sm:grid-cols-2 gap-6 z-10': section.length === 2,
         'grid grid-cols-1 gap-6 z-10': section.length === 1,
@@ -53,7 +58,7 @@ const sections = computed(() => {
       }">
         <div v-for="(image, index) in section" :key="index" class="relative group overflow-hidden rounded-xl p-4">
           <img :src="image.src" :alt="image.alt"
-            class="w-full max-w-[90%] h-auto object-cover transition-transform transform group-hover:scale-105">
+            class="w-full max-w-[70%] h-auto object-cover transition-transform transform group-hover:scale-105">
           <div
             class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
             <span class="text-white text-lg font-semibold">{{ image.alt }}</span>
