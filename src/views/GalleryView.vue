@@ -18,14 +18,14 @@ const img = [
   { src: '/src/assets/images/image4.png', alt: 'City Lights' },
   { src: '/src/assets/images/image5.png', alt: 'Luxury Resort' },
   { src: '/src/assets/images/image3.png', alt: 'Outdoor Lounge' },
-  
+
 
 ];
 
 const sections = computed(() => {
   const pattern = [2, 1, 2, 3];
   let index = 0;
-  let result = [];
+  const result = [];
 
   while (index < img.length) {
     for (const size of pattern) {
