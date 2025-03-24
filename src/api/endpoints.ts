@@ -1,6 +1,7 @@
 const endpoints = {
     auth: {
-        register: { method: "POST", url: "/api/Auth/register" },
+        registerUser: { method: "POST", url: "/api/Auth/registrarUsuario" },
+        registerArtist: { method: "POST", url: "/api/Auth/registrarArtista" },
         login: { method: "POST", url: "/api/Auth/login" },
         refresh: { method: "POST", url: "/api/Auth/refresh" },
         metrics: { method: "GET", url: "/api/Auth/metrics" },
@@ -32,7 +33,7 @@ const endpoints = {
         usuario: { method: "GET", url: "/api/Like/usuario" },
     },
     usuario: {
-        listar: { method: "GET", url: "/api/Usuario" },
+        listar: { method: "GET", url: "/api/Persona" },
         obtener: { method: "GET", url: "/api/Usuario/{id}" },
         crear: { method: "POST", url: "/api/Usuario" },
         actualizar: { method: "PUT", url: "/api/Usuario/{id}" },

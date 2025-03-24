@@ -59,15 +59,15 @@ export const useAuthStore = defineStore("auth", {
       };
     },
 
-    async login(username: string, password: string) {
+    async login(email: string, password: string) {
       this.status = "pending";
       try {
-        const credentials = { username, password };
+        const credentials = { email, password };
         const response: any = await apiRequest("auth.login", {}, credentials);
 
-        if (response.accessToken && response.refreshToken && response.user) {
-          this.setTokens(response.accessToken, response.refreshToken);
-          this.setUserFromToken(response.accessToken);
+        if (response.token && response.refreshToken && response.user) {
+          this.setTokens(response.token, response.refreshToken);
+          this.setUserFromToken(response.token);
           this.status = "authorized";
         } else {
           throw new Error(response.message || "Credenciales incorrectas");
@@ -154,18 +154,20 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async register(username: string, email: string, alias: string, password: string) {
+    async register(nombres: string, apellidos: string, email: string, password: string, confirmPassword:string, artista:boolean = false ) {
       this.status = "pending";
       try {
-        const response: any = await apiRequest("auth.register", {}, {
+        const response: any = await apiRequest(artista ? "auth.registerArtist":"auth.registerUser", {}, {
+          id:"0",
           email,
-          username,
-          alias,
+          nombres,
+          apellidos,
           password,
+          confirmPassword
         });
-        if (response.accessToken && response.refreshToken) {
-          this.setTokens(response.accessToken, response.refreshToken);
-          this.setUserFromToken(response.accessToken);
+        if (response.token && response.refreshToken) {
+          this.setTokens(response.token, response.refreshToken);
+          this.setUserFromToken(response.token);
           this.status = "authorized";
         } else {
           throw new Error("Error en el registro del cliente.");

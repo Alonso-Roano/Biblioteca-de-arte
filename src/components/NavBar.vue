@@ -53,10 +53,19 @@
         </div>
 
         <button
+          v-if="!user" 
           class="px-4 py-2 border border-gray-400 text-gray-700 rounded hover:bg-gray-100"
           @click="MenuOpen = false"
         >
            Iniciar Sesíon
+        </button>
+
+        <button
+          v-if="user" 
+          class="px-4 py-2 border border-gray-400 text-gray-700 rounded hover:bg-gray-100"
+          @click="MenuOpen = false"
+        >
+           Cerrar Sesion
         </button>
 
         <div class="text-sm md:text-base text-gray-700">
