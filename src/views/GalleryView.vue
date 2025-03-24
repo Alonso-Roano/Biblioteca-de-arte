@@ -45,15 +45,17 @@ const sections = computed(() => {
     </div>
 
     <div class="flex flex-col items-center px-6 relative">
+      <!-- Aquí empezamos con el grid -->
       <div v-for="(section, sectionIndex) in sections" :key="sectionIndex" :class="{
-        'grid grid-cols-1 sm:grid-cols-2 gap-6 z-10': section.length === 2,
+        'grid grid-cols-1 sm:grid-cols-2 gap-30 z-10': section.length === 2,
         'grid grid-cols-1 gap-6 z-10': section.length === 1,
         'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 z-10': section.length === 3,
         'mt-12': sectionIndex > 0
       }">
+        <!-- Cada imagen de la sección -->
         <div v-for="(image, index) in section" :key="index" class="relative group overflow-hidden rounded-xl p-4">
           <img :src="image.imagenUrl" :alt="image.titulo"
-            class="w-full max-w-[70%] h-auto object-cover transition-transform transform group-hover:scale-105">
+            class="w-full h-[500px] object-cover transition-transform transform group-hover:scale-105">
           <div
             class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
             <span class="text-white text-lg font-semibold">{{ image.titulo }}</span>
@@ -61,7 +63,7 @@ const sections = computed(() => {
         </div>
       </div>
 
-
+      <!-- Fondo decorativo -->
       <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
         <div class="absolute top-[10%] left-0 w-[20rem] h-16 sm:w-[110rem] sm:h-35 bg-[#C25500]"></div>
         <div class="absolute top-[30%] left-0 w-[90%] h-16 sm:w-[70rem] sm:h-35 bg-neutral-900"></div>
@@ -72,3 +74,6 @@ const sections = computed(() => {
     </div>
   </div>
 </template>
+
+
+
