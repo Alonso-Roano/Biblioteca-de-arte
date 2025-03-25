@@ -45,7 +45,7 @@ const handleRemoveObra = async () => {
       <ObraList :Obras="Obras" @add-Obra="{showModal = true;}" @view-Obra="ObraView = $event; showModalView = true" @edit-Obra="editObra($event); showModalEdit = true" @delete-Obra="deleteObra($event); confirmDeleteModal = true" />
       {{ showModal }}
       <!-- Modal de creación -->
-      <ObraFormCreate v-model:visible="showModal" :Obra="newObra"  @save="handleCreateObra" />
+      <ObraFormCreate v-model:visible="showModal" :Obra="newObra" :Toast="toast.value"  @save="handleCreateObra" />
 
       <!-- Modal de edición -->
       

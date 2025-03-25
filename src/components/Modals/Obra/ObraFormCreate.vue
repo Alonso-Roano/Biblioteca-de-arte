@@ -10,7 +10,7 @@
       <div>
         <label class="block text-gray-600">Título*</label>
         <InputText 
-          v-model="values.titulo" 
+          v-model="titulo" 
           class="w-full" 
           :class="{ 'p-invalid': errors.titulo }" 
         />
@@ -20,7 +20,7 @@
       <div>
         <label class="block text-gray-600">Descripción*</label>
         <Textarea 
-          v-model="values.descripcion" 
+          v-model="descripcion" 
           class="w-full" 
           :class="{ 'p-invalid': errors.descripcion }" 
           rows="3" 
@@ -31,7 +31,7 @@
       <div>
         <label class="block text-gray-600">Precio (USD)*</label>
         <InputNumber 
-          v-model="values.precio" 
+          v-model="precio" 
           class="w-full" 
           :class="{ 'p-invalid': errors.precio }" 
           mode="currency" 
@@ -44,7 +44,7 @@
       <div>
         <label class="block text-gray-600">Artista*</label>
         <Dropdown 
-          v-model="values.artistaId" 
+          v-model="artistaId" 
           :options="artistas" 
           optionLabel="nombres" 
           optionValue="id" 
@@ -58,7 +58,7 @@
       <div>
         <label class="block text-gray-600">Categorías*</label>
         <MultiSelect 
-          v-model="values.categoriaIds" 
+          v-model="categoriaIds" 
           :options="categoria" 
           optionLabel="nombre" 
           optionValue="id" 
@@ -94,8 +94,8 @@
               <span class="text-sm text-gray-600">
                 {{ previewImage ? 'Cambiar imagen' : 'Haz clic para subir una imagen' }}
               </span>
-              <span v-if="values.imagen?.name" class="text-xs text-gray-500 mt-1">
-                {{ values.imagen.name }}
+              <span v-if="imagen?.name" class="text-xs text-gray-500 mt-1">
+                {{ imagen.name }}
               </span>
             </div>
           </label>
@@ -116,11 +116,7 @@ import { computed, defineProps, defineEmits, ref, onMounted } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
 import { Dialog, InputText, Button, InputNumber, Dropdown, MultiSelect, Textarea } from 'primevue';
-import { 
-  newObra, 
-  createObra, 
-  resetNewObra,
-} from '@/composables/obraFunctions';
+import { newObra, createObra } from '@/composables/obraFunctions';
 import { Artists, fetchArtists } from '@/composables/artistaFunctions';
 import { Categorias, fetchCategorias } from '@/composables/categoriaFunctions';
 
@@ -129,17 +125,19 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  Toast: {
+    required: true,
+  },
 });
 
 const emit = defineEmits(['cancel', 'save', 'update:visible']);
 
-// Estado del componente
 const loading = ref(false);
 const artistas = ref([]);
 const categoria = ref([]);
 const previewImage = ref('');
 
-// Esquema de validación
+// Esquema de validación con Yup
 const schema = yup.object({
   titulo: yup.string().required('El título es requerido'),
   descripcion: yup.string().required('La descripción es requerida'),
@@ -155,27 +153,25 @@ const schema = yup.object({
   imagen: yup.mixed()
     .required('La imagen es requerida')
     .test('fileType', 'Solo se permiten imágenes', (value) => {
-      if (!value) return true;
+      if (!value) return false;
       return ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(value.type);
     })
     .test('fileSize', 'La imagen es demasiado grande (máx. 2MB)', (value) => {
-      if (!value) return true;
+      if (!value) return false;
       return value.size <= 2000000; // 2MB
     })
 });
 
-// Configuración de vee-validate
-const { handleSubmit, errors, values, resetForm } = useForm({
-  validationSchema: schema,
-  initialValues: {
-    titulo: '',
-    descripcion: '',
-    precio: null,
-    artistaId: null,
-    categoriaIds: [],
-    imagen: null
-  }
-});
+// Configuración de `vee-validate`
+const { handleSubmit, errors } = useForm({ validationSchema: schema });
+
+// Enlazamos los campos con `useField`
+const { value: titulo } = useField('titulo');
+const { value: descripcion } = useField('descripcion');
+const { value: precio } = useField('precio');
+const { value: artistaId } = useField('artistaId');
+const { value: categoriaIds } = useField('categoriaIds');
+const { value: imagen } = useField('imagen');
 
 // Cargar datos iniciales
 onMounted(async () => {
@@ -195,16 +191,10 @@ const localVisible = computed({
   set: (value) => emit('update:visible', value),
 });
 
-const emitCreate = (value: boolean) => {
-  emit('update:visible', value);
-};
-
-// Manejar selección de archivo
 const handleFileChange = (event) => {
   const file = event.target.files[0];
   if (file) {
-    values.imagen = file;
-    // Crear vista previa
+    imagen.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       previewImage.value = e.target.result;
@@ -213,46 +203,37 @@ const handleFileChange = (event) => {
   }
 };
 
-// Cancelar y limpiar formulario
 const cancel = () => {
-  resetForm();
-  previewImage.value = '';
   emit('update:visible', false);
   emit('cancel');
 };
 
-// Enviar formulario
-const submitForm = handleSubmit(async (values) => {
+const submitForm = handleSubmit(async () => {
   loading.value = true;
-  
+
   try {
-    // Asignar valores a newObra para usar la función createObra
-    Object.assign(newObra.value, values);
-    
-    const obraId = await createObra(toast);
+    const obraData = {
+      titulo: titulo.value,
+      descripcion: descripcion.value,
+      precio: precio.value,
+      artistaId: artistaId.value,
+      categoriaIds: categoriaIds.value,
+      imagen: imagen.value
+    };
+
+    const obraId = await createObra(obraData, props.Toast);
     if (obraId) {
-      toast.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Obra creada correctamente',
-        life: 3000
-      });
       emit('save');
       cancel();
     }
   } catch (error) {
     console.error("Error al crear obra:", error);
-    toast.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'No se pudo crear la obra',
-      life: 3000
-    });
   } finally {
     loading.value = false;
   }
 });
 </script>
+
 
 <style scoped>
 .p-invalid {

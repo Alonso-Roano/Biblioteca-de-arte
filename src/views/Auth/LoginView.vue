@@ -22,7 +22,7 @@ const validateEmail = (email: string): boolean => {
 }
 
 const validatePassword = (password: string): boolean => {
-  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{10,}$/
+  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
   return re.test(password)
 }
 
@@ -41,7 +41,7 @@ const onSubmit = async () => {
 
   if (!password.value || !validatePassword(password.value)) {
     passwordError.value =
-      'La contraseña debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un carácter especial.'
+      'La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un carácter especial.'
     valid = false
   }
 
