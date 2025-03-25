@@ -42,6 +42,7 @@ const endpoints = {
     obra: {
       buscar: { method: "GET", url: "/api/Obra/buscar"},
       listar: { method: "GET", url: "/api/Obra"},
+      obtener: { method: "GET", url: "/api/Obra/{id}" },
     }
 };
 

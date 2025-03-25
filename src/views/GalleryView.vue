@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import Search from '@/components/Search.vue';
+import { useRouter } from 'vue-router';
+import Search from '@/components/SearchObra.vue';
 import { apiRequest } from '@/api/apiClient';
 
-const img = ref<Array<{ imagenUrl: string; titulo: string }>>([]);
+const router = useRouter();
+const img = ref<Array<{ id: string; imagenUrl: string; titulo: string }>>([]);
+const isSearching = ref(false);
 
 const fetchObras = async () => {
   try {
@@ -14,7 +17,10 @@ const fetchObras = async () => {
   }
 };
 
-
+// Función para redirigir a la vista de detalles
+const verDetalles = (id: string) => {
+  router.push({ name: 'DetalleObra', params: { id } });
+};
 
 onMounted(fetchObras);
 
@@ -34,26 +40,27 @@ const sections = computed(() => {
 });
 </script>
 
-
 <template>
   <div class="bg-[#EDE7DD] min-h-screen">
     <h1 class="flex flex-col items-center py-10 px-6 text-5xl font-extrabold text-gray-900 tracking-wide">
-      GALERIA
+      GALERÍA
     </h1>
-    <div class="w-full max-w-4xl mx-auto my-6">
-      <Search />
+
+    <div class="w-full mx-auto my-6">
+      <Search @update:isSearching="isSearching = $event" />
     </div>
 
-    <div class="flex flex-col items-center px-6 relative">
-      <!-- Grid de las secciones de imágenes -->
+    <!-- Ocultar la galería cuando se está buscando -->
+    <div v-if="!isSearching" class="flex flex-col items-center px-6 relative">
       <div v-for="(section, sectionIndex) in sections" :key="sectionIndex" :class="{
         'grid grid-cols-1 sm:grid-cols-2 gap-30 z-10': section.length === 2,
         'grid grid-cols-1 gap-6 z-10': section.length === 1,
         'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 z-10': section.length === 3,
         'mt-12': sectionIndex > 0
       }">
-        <!-- Cada imagen de la sección -->
-        <div v-for="(image, index) in section" :key="index" class="relative group overflow-hidden rounded-xl p-4">
+        <div v-for="(image, index) in section" :key="index"
+          class="relative group overflow-hidden rounded-xl p-4 cursor-pointer"
+          @click="verDetalles(image.id)">
           <img :src="image.imagenUrl" :alt="image.titulo"
             class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover transition-transform transform group-hover:scale-105">
           <div
