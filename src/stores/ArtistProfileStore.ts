@@ -24,6 +24,12 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
   const fetchArtistProfile = async () => {
     const authStore = useAuthStore()
     const userId = authStore.user?.id
+    const IdArtista = authStore.IdArtista as string | number
+
+    if (!userId) {
+      console.warn('No hay ID de usuario.')
+      return
+    }
 
     if (!userId) {
       console.warn('No hay ID de usuario.')
@@ -36,7 +42,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
         success: boolean
         message: string
         data: ArtistProfile
-      }>('artista.obtener', { id: userId })
+      }>('artista.obtener', { id: IdArtista })
 
       if (response.success) {
         artistProfile.value = response.data
@@ -114,7 +120,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
 
   const fetchObrasArtista = async () => {
     const authStore = useAuthStore()
-    const artistaId = authStore.user?.id
+    const artistaId = authStore.IdArtista
 
     if (!artistaId) {
       console.warn('No hay ID de artista')

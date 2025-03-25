@@ -6,13 +6,12 @@ import Dashboard from '@/views/Dashboard/Dashboard.vue'
 import DashboardUsers from '@/views/Dashboard/DashboardUsers.vue'
 import DashboardLibros from '@/views/Dashboard/DashboardLibros.vue'
 import DashboardEtiquetas from '@/views/Dashboard/DashboardEtiquetas.vue'
-//import { useAuthStore } from "@/stores/authStore";
+import { useAuthStore } from '@/stores/authStore'
 import DashboardLikes from '@/views/Dashboard/DashboardLikes.vue'
 import DashboardProfile from '@/views/Dashboard/DashboardProfile.vue'
 import ErrorPage404 from '@/views/Errors/ErrorPage404.vue'
 import GalleryView from '@/views/GalleryView.vue'
 import DetalleProducto from '../views/DetalleProducto.vue'
-//import RegisterArtistView from '@/views/Auth/RegisterArtistView.vue'
 import RegisterArtistView from '@/views/Auth/RegisterView.vue'
 import ProfileView from '@/views/Auth/Profile/ProfileView.vue'
 import ProfileArtist from '@/views/Auth/Profile/ProfileArtist.vue'
@@ -27,49 +26,49 @@ const router = createRouter({
       path: '/',
       name: 'home',
       meta: { menu: true, title: 'Inicio' },
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/galeria',
       name: 'galeria',
       meta: { menu: true, title: 'Galeria' },
-      component: GalleryView
+      component: GalleryView,
     },
     {
       path: '/login',
       name: 'login',
       meta: { menu: true, title: 'Login' },
-      component: LoginView
+      component: LoginView,
     },
     {
       path: '/DetalleProducto',
       name: 'Detalle de producto',
       meta: { menu: true, title: 'Detalle de producto' },
-      component: DetalleProducto
+      component: DetalleProducto,
     },
     {
       path: '/register',
       name: 'register',
       meta: { menu: false, title: 'Register' },
-      component: RegisterView
+      component: RegisterView,
     },
     {
       path: '/registerArtist',
       name: 'registerArtist',
       meta: { menu: false, title: 'RegisterArtist' },
-      component: RegisterArtistView
+      component: RegisterArtistView,
     },
     {
       path: '/myprofile',
       name: 'myprofile',
       meta: { menu: true, title: 'Mi perfil' },
-      component: ProfileView
+      component: ProfileView,
     },
     {
       path: '/myprofileArtist',
       name: 'myprofileArtist',
       meta: { menu: true, title: 'Mi perfil de Artista' },
-      component: ProfileArtist
+      component: ProfileArtist,
     },
     {
       path: '/dashboard',
@@ -134,29 +133,26 @@ const router = createRouter({
   ],
 })
 
-{
-  /*router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  authStore.initializeAuth();
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  authStore.initializeAuth()
 
-  if (to.meta.requiresAuth && authStore.status !== "authorized") {
-    next({ name: "login" });
-  } else if (to.meta.requiresAdmin && authStore.user?.rol !== "Admin") {
-    next({ name: "home" });
-  } else if ((to.name === "login" || to.name === "register") && authStore.status === "authorized") {
-    next({ name: "home" });
-  }else if (to.name === "libro-editar") {
-    const idAutor = to.params.idAutor;
-    const userId = authStore.user?.id;
+  if (to.meta.requiresAuth && authStore.status !== 'authorized') {
+    next({ name: 'login' })
+  } else if (to.meta.requiresAdmin && authStore.user?.rol !== 'Admin') {
+    next({ name: 'home' })
+  } else if ((to.name === 'login' || to.name === 'register') && authStore.status === 'authorized') {
+    next({ name: 'home' })
+  } else if (to.name === 'libro-editar') {
+    const idAutor = to.params.idAutor
+    const userId = authStore.user?.id
     if (idAutor !== userId?.toString()) {
-      next({ name: "home" });
+      next({ name: 'home' })
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
-});
-*/
-}
+})
 export default router

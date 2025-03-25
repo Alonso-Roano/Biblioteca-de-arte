@@ -35,7 +35,7 @@ const endpoints = {
   usuario: {
     listar: { method: 'GET', url: '/api/Persona' },
     filtrar: { method: 'GET', url: '/api/Persona/filter' },
-    obtener: { method: 'GET', url: '/api/Usuario/{id}' },
+    obtener: { method: 'GET', url: '/api/Persona/ObtenerDatosPerfil/{id}' },
     crear: { method: 'POST', url: '/api/Usuario' },
     actualizar: { method: 'PUT', url: '/api/Persona/ActualizarPerfilUsuario/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Persona/{id}' },
@@ -43,7 +43,7 @@ const endpoints = {
   artista: {
     listar: { method: 'GET', url: '/api/Artista' },
     filtrar: { method: 'GET', url: '/api/Artista/filter' },
-    obtener: { method: 'GET', url: '/api/Artista/ObtenerDatosPerfil/{id}' },
+    obtener: { method: 'GET', url: '/api/Artista/{id}' },
     crear: { method: 'POST', url: '/api/Artista' },
     actualizar: { method: 'PUT', url: '/api/Artista/ActualizarPerfilArtista/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Artista/{id}' },

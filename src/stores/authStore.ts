@@ -3,7 +3,6 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import type { AxiosResponse } from "axios";
 import type User from "../interfaces/User";
-import endpoints from "@/api/endpoints";
 import { apiRequest } from "@/api/apiClient";
 import Cookies from "js-cookie";
 
@@ -12,6 +11,8 @@ interface AuthState {
   token: string | null;
   refreshToken: string | null;
   user: User | null;
+  Idpersona: number | null;
+  IdArtista: number | null;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -20,6 +21,8 @@ export const useAuthStore = defineStore("auth", {
     token: Cookies.get("token") || null,
     refreshToken: Cookies.get("refreshToken") || null,
     user: null,
+    Idpersona: null,
+    IdArtista: null,
   }),
 
   actions: {
@@ -57,6 +60,8 @@ export const useAuthStore = defineStore("auth", {
         password:"",
         perfil: decoded.Image,
       };
+      this.Idpersona = parseInt(decoded.idUsuario, 10);
+      this.IdArtista = parseInt(decoded.IdArtista, 10);
     },
 
     async login(email: string, password: string) {

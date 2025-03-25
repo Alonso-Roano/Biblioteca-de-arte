@@ -6,7 +6,7 @@ import ArtistComments from '@/views/Auth/Profile/components/ArtistComments.vue'
 import ArtistsWorks from '@/views/Auth/Profile/components/ArtistsWorks.vue'
 import ArtistCollections from '@/views/Auth/Profile/components/ArtistCollections.vue'
 
-const tabs = ['Editar Perfil', 'Mis Likes', 'Mis Comentarios', 'Mis Obras', 'Mis Exposiciones']
+const tabs = ['Editar Perfil', 'Mis Obras', 'Mis Exposiciones']
 const currentTab = ref('Editar Perfil')
 </script>
 
@@ -34,15 +34,6 @@ const currentTab = ref('Editar Perfil')
             <h2 class="text-lg font-semibold mb-4">Editar Perfil</h2>
             <ArtistForm />
           </div>
-
-          <div v-else-if="currentTab === 'Mis Likes'">
-            <LikeList />
-          </div>
-
-          <div v-else-if="currentTab === 'Mis Comentarios'">
-            <ArtistComments />
-          </div>
-
           <div v-else-if="currentTab === 'Mis Obras'">
             <ArtistsWorks />
           </div>

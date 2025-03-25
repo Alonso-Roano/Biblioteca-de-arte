@@ -27,6 +27,7 @@ export const useProfileStore = defineStore('profile', () => {
   const successMessage = ref<string | null>(null)
   const userComments = ref<any[]>([])
   const userLikes = ref<any[]>([])
+  const IdPersona = authStore.Idpersona
 
   const fetchUserLikes = async () => {
     const authStore = useAuthStore()
@@ -80,7 +81,7 @@ export const useProfileStore = defineStore('profile', () => {
       }>('comentario.filtrar', {
         orderDirection: 'asc',
         filterField: 'idPersona',
-        filterValue: userId
+        filterValue: IdPersona ?? ''
       })
 
       if (response.success) {
