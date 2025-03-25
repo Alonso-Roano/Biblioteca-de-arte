@@ -15,13 +15,13 @@ export const fetchObras = async (params:any = null) => {
 }
 
 export const createObra = async (obraData:any, toast:any) => {
-  if (!obraData.titulo || !obraData.descripcion || !obraData.precio || 
+  if (!obraData.titulo || !obraData.descripcion || !obraData.precio ||
       !obraData.artistaId || !obraData.categoriaIds?.length) {
-    toast.add({ 
-      severity: 'warn', 
-      summary: 'Campos incompletos', 
-      detail: 'Todos los campos son obligatorios', 
-      life: 3000 
+    toast.add({
+      severity: 'warn',
+      summary: 'Campos incompletos',
+      detail: 'Todos los campos son obligatorios',
+      life: 3000
     })
     return null
   }
@@ -39,11 +39,11 @@ export const createObra = async (obraData:any, toast:any) => {
     }
   } catch (error) {
     console.error("Error creating obra:", error)
-    toast.add({ 
-      severity: 'error', 
-      summary: 'Error', 
-      detail: 'No se pudo crear la obra', 
-      life: 3000 
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'No se pudo crear la obra',
+      life: 3000
     })
     return null
   }
@@ -58,9 +58,9 @@ export const uploadObraImage = async (obraId:any, imageFile:any) => {
     formData.append('archivo', imageFile)
 
     return await apiRequest(
-      "obra.SubirImagenObra", 
-      { idObra: obraId }, 
-      formData, 
+      "obra.SubirImagenObra",
+      { idObra: obraId },
+      formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     )
   } catch (error) {
@@ -69,22 +69,24 @@ export const uploadObraImage = async (obraId:any, imageFile:any) => {
   }
 }
 
+export const ObraEdit = ref({})
+
 export const updateObra = async (obraData:any, toast:any) => {
   try {
     const response = await apiRequest(
-      "obra.actualizar", 
-      { id: obraData.id }, 
+      "obra.actualizar",
+      { id: obraData.id },
       obraData
     )
-    
+
     if (response) {
-      toast.add({ 
-        severity: 'success', 
-        summary: 'Éxito', 
-        detail: 'Obra actualizada correctamente', 
-        life: 3000 
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Obra actualizada correctamente',
+        life: 3000
       })
-      
+
       if (obraData.imagen) {
         await uploadObraImage(obraData.id, obraData.imagen)
       }
@@ -93,11 +95,11 @@ export const updateObra = async (obraData:any, toast:any) => {
     }
   } catch (error) {
     console.error("Error updating obra:", error)
-    toast.add({ 
-      severity: 'error', 
-      summary: 'Error', 
-      detail: 'No se pudo actualizar la obra', 
-      life: 3000 
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'No se pudo actualizar la obra',
+      life: 3000
     })
     return false
   }
@@ -111,22 +113,22 @@ export const removeObra = async (toast:any) => {
   try {
     const response = <any> await apiRequest("obra.eliminar", { id: IdObraDelete.value })
     if (response?.message) {
-      toast.add({ 
-        severity: 'success', 
-        summary: 'Éxito', 
-        detail: 'Obra eliminada correctamente', 
-        life: 3000 
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Obra eliminada correctamente',
+        life: 3000
       })
       await fetchObras({ page: 1, limit: 5 })
       return true
     }
   } catch (error) {
     console.error("Error deleting obra:", error)
-    toast.add({ 
-      severity: 'error', 
-      summary: 'Error', 
-      detail: 'No se pudo eliminar la obra', 
-      life: 3000 
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'No se pudo eliminar la obra',
+      life: 3000
     })
     return false
   }
