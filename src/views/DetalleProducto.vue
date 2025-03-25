@@ -13,7 +13,7 @@ const comentarios = ref<any[]>([])
 const nuevoComentario = ref({ texto: '' })
 const leGusta = ref(false)
 
-// ✅ ID de la obra desde la ruta (como string, por si es un slug)
+//Pase del ID de la obra desde la ruta 
 const obraId = route.params.id as string
 
 // Para obtener datos de la obra
@@ -38,7 +38,7 @@ const fetchComentarios = async () => {
 }
 
 
-// ✅ Enviar comentario
+//Para enviar comentario
 const enviarComentario = async () => {
   try {
     if (!nuevoComentario.value.texto.trim()) return
@@ -56,7 +56,7 @@ const enviarComentario = async () => {
   }
 }
 
-// ✅ Alternar "Me gusta"
+// Para alternar con "Me gusta"
 const toggleMeGusta = async () => {
   try {
 await apiRequest("like.toggle", { libroId: obraId })
@@ -66,7 +66,7 @@ await apiRequest("like.toggle", { libroId: obraId })
   }
 }
 
-// ✅ Verificar si le gusta
+// Para verificar si le gusta al usario
 const verificarLike = async () => {
   try {
 const response = await apiRequest<LikeInfo>("like.likesInfo", { libroId: obraId })
@@ -76,7 +76,7 @@ leGusta.value = response.usuarioDioLike
   }
 }
 
-// ✅ Regresar a inicio
+// Ruta para regresar al inicio
 const regresar = () => {
   router.push('/')
 }
