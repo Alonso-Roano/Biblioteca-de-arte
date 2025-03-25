@@ -79,7 +79,7 @@
         </p>
               <!-- Botón para ver más detalles -->
       <router-link
-        :to="`/obra/${work.id}`"
+        :to="`/DetalleProducto/${work.id}`"
         class="mt-4 inline-block bg-[#C25500] text-white font-semibold px-4 py-2 rounded-xl hover:bg-[#A04400] transition-shadow shadow-md hover:shadow-lg text-center"
       >
         Ver más detalles
