@@ -11,6 +11,8 @@
       <SearchDashboard @filter-change="applyFilters" :url="'categoria.filtrar'"/>
       <DataTable :value="CategoriasShow" tableStyle="min-width: 50rem" @page="onPageChange">
         <Column field="nombre" header="Nombre"></Column>
+        <Column field="descripcionCategoria" header="Descripcion"></Column>
+        <Column field="nombreCorto" header="Nombre corto"></Column>
         <Column header="Acciones">
           <template #body="props">
             <span class="block">

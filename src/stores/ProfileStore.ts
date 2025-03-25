@@ -44,10 +44,11 @@ export const useProfileStore = defineStore('profile', () => {
         'like.usuario',
         { token }
       )
-      if (response.success) {
-        userLikes.value = response.data
+      if (response) {
+        console.log(response)
+        userLikes.value = response
       } else {
-        console.warn('Error:', response.message)
+        console.warn('Error:', response)
       }
     } catch (err) {
       console.error('Error en fetchUserLikes:', err)
