@@ -2,7 +2,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { useProfileStore } from '@/stores/ProfileStore.ts'
 import { useToast } from 'primevue/usetoast'
-
+import * as yup from 'yup'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button'
@@ -55,15 +55,29 @@ const validarFormulario = () => {
   return true
 }
 
+const perfilSchema = yup.object({
+  nombre: yup.string().trim().required('El nombre es obligatorio'),
+  apellido: yup.string().trim().required('El apellido es obligatorio'),
+  edad: yup.number().min(1, 'Edad no válida').required('La edad es obligatoria'),
+  nuevaContraseña: yup.string().trim().notRequired(),
+})
+
 const guardarCambios = async () => {
   if (!validarFormulario()) return
 
   try {
+    const datosValidados = await perfilSchema.validate({
+      nombre: nombre.value,
+      apellido: apellido.value,
+      edad: edad.value,
+      nuevaContraseña: nuevaContraseña.value,
+    })
+
     await profileStore.updateProfile({
-      nombres: nombre.value,
-      apellidos: apellido.value,
-      edad: edad.value!,
-      ...(nuevaContraseña.value ? { contraseña: nuevaContraseña.value } : {}),
+      nombres: datosValidados.nombre,
+      apellidos: datosValidados.apellido,
+      edad: datosValidados.edad,
+      ...(datosValidados.nuevaContraseña ? { contraseña: datosValidados.nuevaContraseña } : {}),
     })
 
     toast.add({
