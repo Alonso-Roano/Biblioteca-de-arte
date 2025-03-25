@@ -39,7 +39,6 @@ import IconUsers from '../icons/IconUsers.vue'
           <Icon icon="ri:brush-line" width="24" height="24" class="w-5 h-5 text-[#fff] hover:text-[#F4811B] transition duration-75 group-hover:text-[#F4811B]"/>
             <span class="ms-3">Artistas</span>
           </RouterLink>
-          <!--
           <RouterLink
             :to="{name:'dashboard-obra'}"
             class="flex font-semibold items-center mb-2 p-2 text-[#fff] rounded-lg hover:text-[#F4811B] hover:bg-gray-100 group"
@@ -47,7 +46,6 @@ import IconUsers from '../icons/IconUsers.vue'
             <Icon icon="material-symbols:image-outline-rounded" width="24" height="24" class="w-5 h-5 text-[#fff] hover:text-[#F4811B] transition duration-75 group-hover:text-[#F4811B]"/>
             <span class="ms-3">Obras</span>
           </RouterLink>
-          -->
           <RouterLink
             :to="{name:'dashboard-exposicion'}"
             class="flex font-semibold items-center mb-2 p-2 text-[#fff] rounded-lg hover:text-[#F4811B] hover:bg-gray-100 group"
@@ -62,7 +60,13 @@ import IconUsers from '../icons/IconUsers.vue'
             <Icon icon="mdi:tag" width="24" height="24" class="w-5 h-5 text-[#fff] hover:text-[#F4811B] transition duration-75 group-hover:text-[#F4811B]"/>
             <span class="ms-3">Categorias</span>
           </RouterLink>
-          
+          <RouterLink
+            :to="{name:'dashboard-comentario'}"
+            class="flex font-semibold items-center mb-2 p-2 text-[#fff] rounded-lg hover:text-[#F4811B] hover:bg-gray-100 group"
+          >
+            <Icon icon="material-symbols:comment-rounded" width="24" height="24" class="w-5 h-5 text-[#fff] hover:text-[#F4811B] transition duration-75 group-hover:text-[#F4811B]"/>
+            <span class="ms-3">Comentarios</span>
+          </RouterLink>
           <RouterLink
             :to="{name:'dashboard-likes'}"
             class="flex font-semibold items-center mb-2 p-2 text-[#fff] rounded-lg hover:text-[#F4811B] hover:bg-gray-100 group"

@@ -8,9 +8,9 @@
           <button>Añadir</button>
         </div>
       </div>
-      <SearchDashboard @filter-change="applyFilters" :url="'Comentario.filtrar'"/>
+      <SearchDashboard @filter-change="applyFilters" :url="'comentario.filtrar'"/>
       <DataTable :value="ComentariosShow" tableStyle="min-width: 50rem" @page="onPageChange">
-        <Column field="nombre" header="Nombre"></Column>
+        <Column field="texto" header="Comentario"></Column>
         <Column header="Acciones">
           <template #body="props">
             <span class="block">

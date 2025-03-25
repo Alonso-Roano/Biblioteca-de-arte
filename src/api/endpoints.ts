@@ -90,10 +90,22 @@ const endpoints = {
   obra: {
     listar: { method: 'GET', url: '/api/Obra' },
     obtener: { method: 'GET', url: '/api/Obra/{id}' },
-    crear: { method: 'POST', url: '/api/Obra' },
-    actualizar: { method: 'PUT', url: '/api/Obra/{id}' },
+    crear: { method: 'POST', url: '/api/Obra/CrearObra' },
+    actualizar: { method: 'PUT', url: '/api/Obra/EditarObra/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Obra/{id}' },
     filtrar: { method: 'GET', url: '/api/Obra/filter' },
+    SubirImagenObra: { method: 'POST', url: '/api/Obra/SubirImagenObra/{idObra}' },
+    ActualizarImagenObra: { method: 'PUT', url: '/api/Obra/ActualizarImagenObra/{idObra}' },
+    EliminarImagenObra: { method: 'DELETE', url:"/api/Obra/EliminarImagenObra/{idObra}"},
+    exposicionCrear: { method: 'POST', url:"/api/Obra/exposicion/crear"}
+  },
+  categoria: {
+    listar: { method: 'GET', url: '/api/Categoria' },
+    obtener: { method: 'GET', url: '/api/Categoria/{id}' },
+    crear: { method: 'POST', url: '/api/Categoria' },
+    actualizar: { method: 'PUT', url: '/api/Categoria/{id}' },
+    eliminar: { method: 'DELETE', url: '/api/Categoria/{id}' },
+    filtrar: { method: 'GET', url: '/api/Categoria/filter' },
   },
 }
 

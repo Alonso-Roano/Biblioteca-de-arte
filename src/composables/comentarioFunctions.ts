@@ -3,9 +3,9 @@ import { apiRequest } from '@/api/apiClient'
 
 export const Comentarios = ref([])
 export const IdComentarioDelete = ref<string | number>("")
-export const newComentario = ref({ id:"", nombre: "", descripcionComentario: "", nombreCorto:""})
-export const ComentarioEdit = ref({ id:0, nombre: "", descripcionComentario: "", nombreCorto:""})
-export const ComentarioView = ref({id:"", nombre: "", descripcionComentario: "", nombreCorto:""})
+export const newComentario = ref({ id:"", idPersona: 0, idObra: 0, texto: "", fechaComentario: ""})
+export const ComentarioEdit = ref({ id:"", texto:""})
+export const ComentarioView = ref({ id:"", idPersona: 0, idObra: 0, texto: "", fechaComentario: ""})
 
 export const fetchComentarios = async (params:any = null) => {
   try {
@@ -17,7 +17,7 @@ export const fetchComentarios = async (params:any = null) => {
 }
 
 export const createComentario = async (toast: any) => {
-  if (!newComentario.value.nombre || !newComentario.value.descripcionComentario || !newComentario.value.nombreCorto) {
+  if (!newComentario.value.idPersona || !newComentario.value.texto || !newComentario.value.idObra) {
     toast.add({ severity: 'warn', summary: 'Campos incompletos', detail: 'Todos los campos son obligatorios', life: 3000 })
     return
   }
@@ -44,7 +44,8 @@ export const editComentario = (Comentario: any) => {
 }
 
 export const updateComentario = async (toast: any) => {
-  if (!newComentario.value.nombre || !newComentario.value.descripcionComentario || !newComentario.value.nombreCorto) {
+  console.log(ComentarioEdit.value.texto)
+  if (ComentarioEdit.value.texto) {
     const usuario = ComentarioEdit.value
     const res = <any> await apiRequest("comentario.actualizar", { id: ComentarioEdit.value.id }, usuario)
     if (res.nombre) {

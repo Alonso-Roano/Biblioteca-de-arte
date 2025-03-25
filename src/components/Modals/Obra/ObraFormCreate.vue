@@ -68,6 +68,19 @@
         />
         <small class="p-error">{{ errors.categoriaIds }}</small>
       </div>
+      <div>
+        <label class="block text-gray-600">Exposicion*</label>
+        <MultiSelect 
+          v-model="exposicionIds" 
+          :options="exposicion" 
+          optionLabel="nombre" 
+          optionValue="id" 
+          class="w-full" 
+          :class="{ 'p-invalid': errors.exposicionId }"
+          placeholder="Seleccione una Exposicion"
+        />
+        <small class="p-error">{{ errors.exposicionId }}</small>
+      </div>
       
       <div>
         <label class="block text-gray-600 mb-2">Imagen de la Obra*</label>
@@ -115,10 +128,12 @@
 import { computed, defineProps, defineEmits, ref, onMounted } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
+import * as nsfwjs from 'nsfwjs';
 import { Dialog, InputText, Button, InputNumber, Dropdown, MultiSelect, Textarea } from 'primevue';
 import { newObra, createObra } from '@/composables/obraFunctions';
 import { Artists, fetchArtists } from '@/composables/artistaFunctions';
 import { Categorias, fetchCategorias } from '@/composables/categoriaFunctions';
+import { Exposicions, fetchExposicions } from '@/composables/exposicionFunctions';
 
 const props = defineProps({
   visible: {
@@ -132,6 +147,7 @@ const emit = defineEmits(['cancel', 'save', 'update:visible']);
 const loading = ref(false);
 const artistas = ref([]);
 const categoria = ref([]);
+const exposicion = ref([]);
 const previewImage = ref('');
 
 const schema = yup.object({
@@ -143,6 +159,9 @@ const schema = yup.object({
   artistaId: yup.number()
     .required('Debe seleccionar un artista')
     .min(1, 'Debe seleccionar un artista'),
+  exposicionIds: yup.number()
+    .required('Debe seleccionar una Exposicion')
+    .min(1, 'Debe seleccionar una Exposicion'),
   categoriaIds: yup.array()
     .min(1, 'Debe seleccionar al menos una categoría')
     .required('Debe seleccionar al menos una categoría'),
@@ -167,6 +186,7 @@ const { value: descripcion } = useField('descripcion');
 const { value: precio } = useField('precio');
 const { value: artistaId } = useField('artistaId');
 const { value: categoriaIds } = useField('categoriaIds');
+const { value: exposicionIds } = useField('exposicionIds');
 const { value: imagen } = useField('imagen');
 
 // Cargar datos iniciales
@@ -176,6 +196,8 @@ onMounted(async () => {
     artistas.value = Artists.value.items;
     await fetchCategorias({ orderDirection: "asc" });
     categoria.value = Categorias.value.items;
+    await fetchExposicions({ orderDirection: "asc" })
+    exposicion.value = Exposicions.value.items;
   } catch (error) {
     console.error("Error cargando datos:", error);
   }
@@ -187,22 +209,71 @@ const localVisible = computed({
   set: (value) => emit('update:visible', value),
 });
 
-const handleFileChange = (event) => {
+const handleFileChange = async (event) => {
   const file = event.target.files[0];
-  if (file) {
-    imagen.value = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewImage.value = e.target.result;
+  if (!file) return;
+
+  imagen.value = file;
+  const reader = new FileReader();
+  
+  reader.onload = async (e) => {
+    previewImage.value = e.target.result;
+
+    const img = new Image();
+    img.src = e.target.result;
+    
+    img.onload = async () => {
+      try {
+        // Cargar el modelo predeterminado (MobileNetV2)
+        const model = await nsfwjs.load();
+        
+        // Clasificar la imagen
+        const predictions = await model.classify(img);
+        
+        // Verificar contenido NSFW (Porn, Hentai, Sexy) con un umbral
+        const nsfwDetected = predictions.some(prediction => 
+          (prediction.className === 'Porn' || 
+           prediction.className === 'Hentai' || 
+           prediction.className === 'Sexy') && 
+          prediction.probability > 0.7
+        );
+        
+        if (nsfwDetected) {
+          errors.imagen = 'La imagen contiene contenido inapropiado.';
+          imagen.value = null; 
+          previewImage.value = '';
+        } else {
+          errors.imagen = '';
+        }
+      } catch (error) {
+        console.error('Error al verificar la imagen:', error);
+        // Opcional: Mostrar un mensaje al usuario
+        errors.imagen = 'Error al procesar la imagen. Inténtalo de nuevo.';
+      }
     };
-    reader.readAsDataURL(file);
-  }
+    
+    img.onerror = () => {
+      console.error('Error al cargar la imagen');
+      errors.imagen = 'La imagen no se pudo cargar.';
+    };
+  };
+  
+  reader.onerror = () => {
+    console.error('Error al leer el archivo');
+    errors.imagen = 'Error al leer el archivo.';
+  };
+  
+  reader.readAsDataURL(file);
 };
 
 const cancel = () => {
   emit('update:visible', false);
   emit('cancel');
 };
+
+const emitCreate = (value: boolean) => {
+    emit('update:visible', value);
+  };
 
 const submitForm = handleSubmit(async () => {
   const obraData = {
@@ -211,6 +282,7 @@ const submitForm = handleSubmit(async () => {
       precio: precio.value,
       artistaId: artistaId.value,
       categoriaIds: categoriaIds.value,
+      exposicionIds: exposicionIds.value,
       imagen: imagen.value
     };
   newObra.value = obraData;

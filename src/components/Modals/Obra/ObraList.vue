@@ -27,6 +27,10 @@
                 @click="$emit('edit-Obra', props.data)">
                 <Icon icon="mdi:pencil-outline" width="24" height="24" />
               </Button>
+              <Button icon="pi pi-pencil" variant="text" severity="info" rounded aria-label="Editar"
+                @click="$emit('edit-ObraImagen', props.data)">
+                <Icon icon="material-symbols:image-outline-rounded" width="24" height="24" />
+              </Button>
               <Button icon="pi pi-trash" severity="danger" variant="text" rounded aria-label="Eliminar"
                 @click="$emit('delete-Obra', props.data.id)">
                 <Icon icon="material-symbols:delete" width="24" height="24" />
