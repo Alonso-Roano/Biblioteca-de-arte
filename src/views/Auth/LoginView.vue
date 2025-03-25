@@ -27,11 +27,9 @@ const validatePassword = (password: string): boolean => {
 }
 
 const onSubmit = async () => {
-  // Limpiar errores anteriores
   emailError.value = ''
   passwordError.value = ''
 
-  // Validaciones
   let valid = true
 
   if (!email.value || !validateEmail(email.value)) {
@@ -47,7 +45,6 @@ const onSubmit = async () => {
 
   if (!valid) return
 
-  // Login
   try {
     await authStore.login(email.value, password.value)
     errorMessage.value = null

@@ -75,7 +75,7 @@ const guardar = async () => {
 
   let result
   if (isEditing.value) {
-    result = await artistStore.editarExposicionYAsignarObras(props.exposicion!.id, datos, obrasSeleccionadas.value.map(o => o.id))
+    result = await artistStore.editarExposicion(props.exposicion!.id, datos, obrasSeleccionadas.value.map(o => o.id))
   } else {
     result = await artistStore.crearExposicionYAsignarObras(datos, obrasSeleccionadas.value.map(o => o.id))
   }
@@ -118,7 +118,7 @@ const guardar = async () => {
         <Calendar v-model="fechaFin" showIcon class="w-full" />
       </div>
 
-      <div>
+      <div v-if="!isEditing">
         <label class="block mb-1 text-sm font-medium">Obras a incluir</label>
         <MultiSelect
           v-model="obrasSeleccionadas"

@@ -196,40 +196,81 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
   }
 
   const crearExposicionYAsignarObras = async (
-    exposicionData: { nombre: string; fechaInicio: string; fechaFin: string },
+    exposicionData: { nombre: string; fechaInicio: string; fechaFin: string; },
     idsObras: number[]
   ) => {
     try {
-      const response = await apiRequest<{ id: number }>('exposicion.crear', {}, exposicionData)
-      const idExposicion = response.id
+      const dataConArtista = {
+        ...exposicionData,
+        idArtista: IdArtista,
+        isDeleted: false
+      }
+      const response = await apiRequest<{
+        success: boolean
+        message: string
+        data: {
+          id: number
+        }
+      }>('exposicion.crear', {}, dataConArtista)
+
+      if (!response.success) {
+        throw new Error(response.message || 'Error al crear la exposición')
+      }
+
+      const idExposicion = response.data.id
 
       for (const idObra of idsObras) {
-        await apiRequest('obra.exposicionCrear', {}, { idObra, idExposicion })
+        await apiRequest('obra.exposicionCrear', { idObra, idExposicion }, null)
       }
+
       await fetchColeccionesArtista()
+
+      return { success: true }
     } catch (error) {
       console.error('Error al crear exposición y asignar obras:', error)
-
+      return { success: false, error }
     }
   }
 
-  const editarExposicionYAsignarObras = async (
+
+  const editarExposicion = async (
     idExposicion: number,
     exposicionData: { nombre: string; fechaInicio: string; fechaFin: string },
     idsObras: number[]
   ) => {
     try {
-      await apiRequest('exposicion.actualizar', { id: idExposicion }, exposicionData)
+      const dataConExtras = {
+        ...exposicionData,
+        idArtista: IdArtista,
+        isDeleted: false
+      }
+
+      await apiRequest('exposicion.actualizar', { id: idExposicion }, dataConExtras)
 
       for (const idObra of idsObras) {
-        await apiRequest('obra.exposicionCrear', {}, { idObra, idExposicion })
+        await apiRequest('obra.exposicionCrear', { idObra, idExposicion }, null)
       }
 
       await fetchColeccionesArtista()
+      return { success: true }
     } catch (error) {
       console.error('Error al editar exposición:', error)
+      return { success: false, error }
     }
   }
+
+  const eliminarExposicion = async (idExposicion: number) => {
+    try {
+      await apiRequest('exposicion.eliminar', { id: idExposicion })
+      await fetchColeccionesArtista()
+      return { success: true }
+    } catch (error) {
+      console.error('Error al eliminar exposición:', error)
+      return { success: false, error }
+    }
+  }
+
+
 
 
 
@@ -246,6 +287,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
     colecciones,
     fetchColeccionesArtista,
     crearExposicionYAsignarObras,
-    editarExposicionYAsignarObras
+    editarExposicion,
+    eliminarExposicion
   }
 })
