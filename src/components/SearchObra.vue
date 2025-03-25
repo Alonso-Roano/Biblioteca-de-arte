@@ -44,12 +44,8 @@
     <div v-if="searchHistory.length" class="mt-3 pt-3 border-t border-gray-100">
       <h4 class="text-sm text-gray-500 mb-2">Búsquedas recientes:</h4>
       <div class="flex flex-wrap gap-2">
-        <button
-          v-for="(search, index) in searchHistory"
-          :key="index"
-          @click="applyHistorySearch(search)"
-          class="text-xs bg-gray-50 hover:bg-[#EDE7DD] px-2 py-1 rounded-full border border-gray-200 flex items-center gap-1"
-        >
+        <button v-for="(search, index) in searchHistory" :key="index" @click="applyHistorySearch(search)"
+          class="text-xs bg-gray-50 hover:bg-[#EDE7DD] px-2 py-1 rounded-full border border-gray-200 flex items-center gap-1">
           <ArrowPathIcon class="h-3 w-3 text-gray-400" />
           {{ getSearchTypeName(search.type) }}: "{{ search.query }}"
         </button>
@@ -57,48 +53,39 @@
     </div>
   </div>
 
-<!-- Resultados -->
-<div v-if="searchResults.length > 0" class="max-w-6xl mx-auto">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div v-for="work in searchResults" :key="work.slug" class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow">
-      <img
-        :src="work.imagenUrl || 'https://via.placeholder.com/400x300?text=Imagen+no+disponible'"
-        :alt="work.titulo"
-        class="w-full h-64 object-cover"
-      />
-      <div class="p-6">
-        <h3 class="font-bold text-2xl text-gray-800 mb-2">{{ work.titulo }}</h3>
-        <p class="text-base text-gray-600 mb-4">
-          <span class="font-medium">Artista:</span> {{ work.artistaNombre || 'Desconocido' }}
-        </p>
-        <p class="text-[#C25500] font-bold text-xl">
-          {{ work.precio ? `$${work.precio.toLocaleString()}` : 'Precio no disponible' }}
-        </p>
-        <p v-if="work.descripcion" class="text-gray-500 text-base mt-3 line-clamp-3">
-          {{ work.descripcion }}
-        </p>
-              <!-- Botón para ver más detalles -->
-      <router-link
-        :to="`/DetalleProducto/${work.id}`"
-        class="mt-4 inline-block bg-[#C25500] text-white font-semibold px-4 py-2 rounded-xl hover:bg-[#A04400] transition-shadow shadow-md hover:shadow-lg text-center"
-      >
-        Ver más detalles
-      </router-link>
+  <!-- Resultados -->
+  <div v-if="searchResults.length > 0" class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-for="work in searchResults" :key="work.slug"
+        class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow">
+        <img :src="work.imagenUrl || 'https://via.placeholder.com/400x300?text=Imagen+no+disponible'" :alt="work.titulo"
+          class="w-full h-64 object-cover" />
+        <div class="p-6">
+          <h3 class="font-bold text-2xl text-gray-800 mb-2">{{ work.titulo }}</h3>
+          <p class="text-base text-gray-600 mb-4">
+            <span class="font-medium">Artista:</span> {{ work.artistaNombre || 'Desconocido' }}
+          </p>
+          <p class="text-[#C25500] font-bold text-xl">
+            {{ work.precio ? `$${work.precio.toLocaleString()}` : 'Precio no disponible' }}
+          </p>
+          <p v-if="work.descripcion" class="text-gray-500 text-base mt-3 line-clamp-3">
+            {{ work.descripcion }}
+          </p>
+          <button @click="verDetalles(work.slug)"
+            class="mt-4 bg-[#C25500] text-white font-semibold px-4 py-2 rounded-xl hover:bg-[#A04400] transition-shadow shadow-md hover:shadow-lg">
+            Ver más detalles
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Botón "Cargar más" más grande -->
-  <button
-    v-if="searchResults.length >= pagination.take"
-    @click="loadMore"
-    :disabled="isLoading"
-    class="mt-8 mx-auto bg-[#EDE7DD] hover:bg-[#E0D5C3] text-[#C25500] font-semibold text-lg px-6 py-3 rounded-lg flex items-center gap-3"
-  >
-    <ArrowPathIcon v-if="isLoading" class="h-5 w-5 animate-spin" />
-    {{ isLoading ? 'Cargando...' : 'Cargar más' }}
-  </button>
-</div>
+    <!-- Botón "Cargar más" más grande -->
+    <button v-if="searchResults.length >= pagination.take" @click="loadMore" :disabled="isLoading"
+      class="mt-8 mx-auto bg-[#EDE7DD] hover:bg-[#E0D5C3] text-[#C25500] font-semibold text-lg px-6 py-3 rounded-lg flex items-center gap-3">
+      <ArrowPathIcon v-if="isLoading" class="h-5 w-5 animate-spin" />
+      {{ isLoading ? 'Cargando...' : 'Cargar más' }}
+    </button>
+  </div>
 
 
   <!-- Estado vacío -->
@@ -108,7 +95,8 @@
     </div>
     <h3 class="text-xl font-medium text-gray-700">No se encontraron resultados</h3>
     <p class="text-gray-500 mt-2">Intenta con otros términos de búsqueda</p>
-    <button @click="resetSearch" class="mt-4 text-[#C25500] hover:underline flex items-center justify-center gap-1 mx-auto">
+    <button @click="resetSearch"
+      class="mt-4 text-[#C25500] hover:underline flex items-center justify-center gap-1 mx-auto">
       <ArrowPathIcon class="h-4 w-4" />
       Reiniciar búsqueda
     </button>
@@ -125,17 +113,19 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { apiRequest } from '@/api/apiClient';
 import { MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 
 // Estados reactivos
 const emit = defineEmits(['update:isSearching']);
+const router = useRouter();
 const searchQuery = ref('');
 const searchType = ref('titulo');
 const searchResults = ref<any[]>([]);
 const isLoading = ref(false);
 const isPopular = ref(false);
-const searchHistory = ref<Array<{type: string, query: string}>>([]);
+const searchHistory = ref<Array<{ type: string, query: string }>>([]);
 const pagination = ref({
   skip: 0,
   take: 20
@@ -182,6 +172,11 @@ const searchWorks = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+// Función para redirigir a la vista de detalles
+const verDetalles = (id: string) => {
+  router.push({ path: `/DetalleProducto/${id}` });
 };
 
 // Cargar más resultados
@@ -233,7 +228,7 @@ const addToSearchHistory = (type: string, query: string) => {
 };
 
 // Aplicar búsqueda del historial
-const applyHistorySearch = (search: {type: string, query: string}) => {
+const applyHistorySearch = (search: { type: string, query: string }) => {
   searchType.value = search.type;
   searchQuery.value = search.query;
   searchWorks();
