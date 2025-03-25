@@ -82,7 +82,8 @@ apiClient.interceptors.response.use(
 export const apiRequest = async <T>(
     key: string,
     params: Record<string, string | number> = {},
-    data: any = null
+    data: any = null,
+    customConfig: AxiosRequestConfig = {}
 ): Promise<T> => {
     try {
         const endpointConfig: EndpointConfig | undefined = key
@@ -102,7 +103,17 @@ export const apiRequest = async <T>(
             }
         });
 
-        const config: AxiosRequestConfig = { method, url, data, params };
+        const config: AxiosRequestConfig = {
+            method,
+            url,
+            data,
+            params,
+            headers: {
+                "Content-Type": "application/json", // Valor por defecto
+                ...customConfig.headers, // Sobrescribir si se proporciona
+            },
+            ...customConfig,
+        };
 
         const response: AxiosResponse<T> = await apiClient(config);
         return response.data;

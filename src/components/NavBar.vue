@@ -113,10 +113,19 @@ const MenuOpen = ref(false)
 
 const currentPageTitle = computed(() => route.meta?.title || 'Página Actual')
 
+const userRol = computed(() => authStore.user?.rol)
+
 const menuRoutes = computed(() => {
-  return router.options.routes.filter(
-    (r) => r.meta?.menu && !r.redirect
-  )
+  return router.options.routes.filter((r) => {
+    const visible = r.meta?.menu && !r.redirect
+
+    const allowedRoles = r.meta?.roles
+    if (allowedRoles && Array.isArray(allowedRoles)) {
+      return visible && allowedRoles.includes(userRol.value)
+    }
+
+    return visible
+  })
 })
 
 const handleLogout = () => {
@@ -141,7 +150,6 @@ const logout = () => {
   })
 
 }
-
 
 watch(() => route.path, () => {
   MenuOpen.value = false
