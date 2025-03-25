@@ -53,7 +53,6 @@ export const useAuthStore = defineStore("auth", {
 
       const rol = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-
       this.user = {
         id: decoded.Id,
         nombre: decoded.Nombre,

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ArtistForm from '@/views/Auth/Profile/components/ArtistForm.vue'
-import LikeList from '@/views/Auth/Profile/components/LikeList.vue'
-import ArtistComments from '@/views/Auth/Profile/components/ArtistComments.vue'
 import ArtistsWorks from '@/views/Auth/Profile/components/ArtistsWorks.vue'
 import ArtistCollections from '@/views/Auth/Profile/components/ArtistCollections.vue'
 
