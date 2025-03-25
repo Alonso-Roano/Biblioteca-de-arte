@@ -2,25 +2,15 @@
   <Dialog
     :visible="localVisible"
     @update:visible="emitUpdate"
-    header="Editar Exposición"
+    header="Editar Comentario"
     :modal="true"
     style="background-color: #fff; width: 500px; max-width: 100%; margin-inline: 20px;"
   >
     <div class="flex flex-col gap-4">
       <div>
-        <label class="block text-gray-600">Nombre</label>
-        <InputText v-model="nombre" class="w-full" :class="{ 'p-invalid': errors.nombre }" />
-        <small class="p-error" v-if="errors.nombre">{{ errors.nombre }}</small>
-      </div>
-      <div>
-        <label class="block text-gray-600">Descripción de la Categoría</label>
-        <InputText v-model="descripcionComentario" class="w-full" :class="{ 'p-invalid': errors.descripcionComentario }" />
-        <small class="p-error" v-if="errors.descripcionComentario">{{ errors.descripcionComentario }}</small>
-      </div>
-      <div>
-        <label class="block text-gray-600">Nombre Corto</label>
-        <InputText v-model="nombreCorto" class="w-full" :class="{ 'p-invalid': errors.nombreCorto }" />
-        <small class="p-error" v-if="errors.nombreCorto">{{ errors.nombreCorto }}</small>
+        <label class="block text-gray-600">Comentario</label>
+        <InputText v-model="texto" class="w-full" :class="{ 'p-invalid': errors.texto }" />
+        <small class="p-error" v-if="errors.texto">{{ errors.texto }}</small>
       </div>
       <div class="flex justify-end gap-2">
         <Button label="Cancelar" severity="secondary" @click="cancel" />
@@ -65,34 +55,33 @@ const emitUpdate = (value: boolean) => {
 };
 
 const schema = yup.object({
-  nombre: yup.string().required('El nombre es requerido'),
-  descripcionComentario: yup.string().required('La descripción es requerida'),
-  nombreCorto: yup.string().required('El nombre corto es requerido'),
+  texto: yup.string().required('El nombre es requerido'),
 });
 
 const { handleSubmit, errors } = useForm({
   validationSchema: schema,
 });
 
-const { value: nombre } = useField('nombre');
-const { value: descripcionComentario } = useField('descripcionComentario');
-const { value: nombreCorto } = useField('nombreCorto');
+const { value: texto } = useField('texto');
 const idComentario = ref(0);
+const idObra = ref(0);
+const idPersona = ref(0);
+const fechaComentario = ref(0);
 
 watch(
   () => props.Comentario,
   (newComentario) => {
     idComentario.value = newComentario.id;
-    nombre.value = newComentario.nombre || '';
-    descripcionComentario.value = newComentario.descripcionComentario || '';
-    nombreCorto.value = newComentario.nombreCorto || '';
+    idPersona.value = newComentario.idPersona;
+    idObra.value = newComentario.idObra;
+    fechaComentario.value = newComentario.fechaComentario;
+    texto.value = newComentario.texto || '';
   },
   { immediate: true }
 );
 
 const submitForm = handleSubmit((values) => {
-  ComentarioEdit.value = { ...values, id: idComentario.value };
-  console.log(values, props.Comentario);
+  ComentarioEdit.value = { ...values, id: idComentario.value, idPersona: idPersona.value, idObra: idObra.value, fechaComentario: fechaComentario.value, isDeleted:false  };
   emit('save');
 });
 </script>

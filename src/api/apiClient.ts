@@ -109,8 +109,8 @@ export const apiRequest = async <T>(
             data,
             params,
             headers: {
-                "Content-Type": "application/json", // Valor por defecto
-                ...customConfig.headers, // Sobrescribir si se proporciona
+                "Content-Type": "application/json",
+                ...customConfig.headers,
             },
             ...customConfig,
         };

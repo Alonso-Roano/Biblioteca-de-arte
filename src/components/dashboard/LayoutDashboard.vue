@@ -8,7 +8,7 @@ import SidebarAdmin from '@/components/dashboard/SidebarAdmin.vue'
     <div class="flex grow">
       <SidebarAdmin />
       <div class="w-full h-auto">
-        <div class=" bg-[#f5edd9] p-4 h-full pr-8">
+        <div class=" bg-[#f5edd9] p-4 h-full pr-8 relative">
           <slot name="content"> </slot>
         </div>
       </div>

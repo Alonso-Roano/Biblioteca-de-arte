@@ -2,7 +2,7 @@
   <Dialog
     :visible="localVisible"
     @update:visible="emitUpdate"
-    header="Detalles de la Categoría"
+    header="Detalles del Comentario"
     :modal="true"
     style="background-color: #fff; width: 500px; max-width: 100%; margin-inline: 20px;"
   >
@@ -12,20 +12,16 @@
         <InputText v-model="Comentario.id" class="w-full" disabled />
       </div>
       <div>
-        <label class="block text-gray-600">Nombre</label>
-        <InputText v-model="Comentario.nombre" class="w-full" disabled />
+        <label class="block text-gray-600">Texto</label>
+        <InputText v-model="Comentario.texto" class="w-full" disabled />
       </div>
       <div>
-        <label class="block text-gray-600">Descripción de la Categoría</label>
-        <InputText v-model="Comentario.descripcionComentario" class="w-full" disabled />
-      </div>
-      <div>
-        <label class="block text-gray-600">Nombre Corto</label>
-        <InputText v-model="Comentario.nombreCorto" class="w-full" disabled />
+        <label class="block text-gray-600">Fecha del Comentario</label>
+        <InputText v-model="Comentario.fechaComentario" class="w-full" disabled />
       </div>
       <div>
         <label class="block text-gray-600">Fecha de Creación</label>
-        <InputText v-model="Comentario.createdAt" class="w-full" disabled/>
+        <InputText v-model="Comentario.createdAt" class="w-full" disabled />
       </div>
       <div class="flex justify-end">
         <Button label="Cerrar" severity="secondary" @click="closeModal" />
@@ -64,5 +60,4 @@ const closeModal = () => {
 const emitUpdate = (value: boolean) => {
   emit('update:visible', value);
 };
-
 </script>
