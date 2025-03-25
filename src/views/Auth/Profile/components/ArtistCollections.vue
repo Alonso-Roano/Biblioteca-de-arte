@@ -103,7 +103,7 @@ onMounted(() => {
             icon="pi pi-trash"
             class="p-button-sm"
             severity="danger"
-            @click="() => confirmarEliminar(expo)"
+            @click="() => confirmarEliminacion(expo)"
           />
         </div>
 

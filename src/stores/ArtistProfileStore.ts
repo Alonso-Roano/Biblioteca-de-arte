@@ -245,10 +245,14 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
         isDeleted: false
       }
 
-      await apiRequest('exposicion.actualizar', { id: idExposicion }, dataConExtras)
+      const expo = <any> await apiRequest('exposicion.actualizar', { id: idExposicion }, dataConExtras)
+
+      await eliminarExposicion(idExposicion);
+
+      const idExpo = expo.data.id;
 
       for (const idObra of idsObras) {
-        await apiRequest('obra.exposicionCrear', { idObra, idExposicion }, null)
+        await apiRequest('obra.exposicionCrear', { idObra, idExposicion: idExpo }, null)
       }
 
       await fetchColeccionesArtista()

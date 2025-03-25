@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
@@ -32,6 +32,7 @@ const nombre = ref('')
 const fechaInicio = ref<Date | null>(null)
 const fechaFin = ref<Date | null>(null)
 const obrasSeleccionadas = ref<any[]>([])
+const obras = ref<any[]>([])
 const artistStore = useArtistProfileStore()
 const toast = useToast()
 
@@ -98,6 +99,11 @@ const guardar = async () => {
     })
   }
 }
+const fetchDatos = async() =>{
+  await artistStore.fetchObrasArtista();
+  obras.value = artistStore.obras;
+}
+onMounted(fetchDatos)
 </script>
 
 <template>
@@ -118,11 +124,11 @@ const guardar = async () => {
         <Calendar v-model="fechaFin" showIcon class="w-full" />
       </div>
 
-      <div v-if="!isEditing">
+      <div>
         <label class="block mb-1 text-sm font-medium">Obras a incluir</label>
         <MultiSelect
           v-model="obrasSeleccionadas"
-          :options="artistStore.obras"
+          :options="obras"
           optionLabel="titulo"
           placeholder="Selecciona obras"
           class="w-full"
