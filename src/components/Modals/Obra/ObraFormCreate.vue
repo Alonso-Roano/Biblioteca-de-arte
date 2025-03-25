@@ -125,9 +125,6 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  Toast: {
-    required: true,
-  },
 });
 
 const emit = defineEmits(['cancel', 'save', 'update:visible']);
@@ -137,7 +134,6 @@ const artistas = ref([]);
 const categoria = ref([]);
 const previewImage = ref('');
 
-// Esquema de validación con Yup
 const schema = yup.object({
   titulo: yup.string().required('El título es requerido'),
   descripcion: yup.string().required('La descripción es requerida'),
@@ -209,10 +205,7 @@ const cancel = () => {
 };
 
 const submitForm = handleSubmit(async () => {
-  loading.value = true;
-
-  try {
-    const obraData = {
+  const obraData = {
       titulo: titulo.value,
       descripcion: descripcion.value,
       precio: precio.value,
@@ -220,17 +213,9 @@ const submitForm = handleSubmit(async () => {
       categoriaIds: categoriaIds.value,
       imagen: imagen.value
     };
-
-    const obraId = await createObra(obraData, props.Toast);
-    if (obraId) {
-      emit('save');
-      cancel();
-    }
-  } catch (error) {
-    console.error("Error al crear obra:", error);
-  } finally {
-    loading.value = false;
-  }
+  newObra.value = obraData;
+  emit('save');
+  cancel();
 });
 </script>
 

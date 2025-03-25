@@ -3,6 +3,9 @@ import { apiRequest } from '@/api/apiClient'
 
 export const Obras = ref([])
 export const IdObraDelete = ref<string | number>("")
+export const newObra = ref({id: "", titulo: "", descripcion: "", precio: "", artistaId: "", categoriaIds: "", imagen: ""})
+export const ObraEdit = ref({ id:0, source: "", message: "", stackTrace: ""})
+export const ObraView = ref({id:"", source: "", message: "", stackTrace: ""})
 
 export const fetchObras = async (params:any = null) => {
   try {
@@ -14,9 +17,9 @@ export const fetchObras = async (params:any = null) => {
   }
 }
 
-export const createObra = async (obraData:any, toast:any) => {
-  if (!obraData.titulo || !obraData.descripcion || !obraData.precio || 
-      !obraData.artistaId || !obraData.categoriaIds?.length) {
+export const createObra = async ( toast:any) => {
+  if (!newObra.value.titulo || !newObra.value.descripcion || !newObra.value.precio || 
+      !newObra.value.artistaId || !newObra.value.categoriaIds?.length) {
     toast.add({ 
       severity: 'warn', 
       summary: 'Campos incompletos', 
@@ -27,12 +30,18 @@ export const createObra = async (obraData:any, toast:any) => {
   }
 
   try {
-    const obraSend = {...obraData, ImagenUrl:"url"}
+    const obraSend = {...newObra.value, ImagenUrl:"url"}
     const response = <any> await apiRequest("obra.crear", {}, obraSend)
     console.log(response)
     if (response) {
-      if (obraData.imagen) {
-        await uploadObraImage(response, obraData.imagen)
+      toast.add({ 
+        severity: 'success', 
+        summary: 'Éxito', 
+        detail: 'Obra creada correctamente', 
+        life: 3000 
+      })
+      if (newObra.value.imagen) {
+        await uploadObraImage(response, newObra.value.imagen)
       }
       await fetchObras({ page: 1, limit: 5 })
       return response.id
@@ -69,11 +78,16 @@ export const uploadObraImage = async (obraId:any, imageFile:any) => {
   }
 }
 
-export const updateObra = async (obraData:any, toast:any) => {
+export const editObra = (LogError: any) => {
+  console.log(LogError)
+  ObraEdit.value = { ...LogError, nombre: LogError.nombre }
+}
+
+export const updateObra = async (toast:any) => {
   try {
     const response = await apiRequest(
       "obra.actualizar", 
-      { id: obraData.id }, 
+      { id: newObra.id }, 
       obraData
     )
     

@@ -10,7 +10,13 @@
       </div>
       <SearchDashboard @filter-change="applyFilters" :url="'obra.filtrar'"/>
       <DataTable :value="ObrasShow" tableStyle="min-width: 50rem" @page="onPageChange">
-        <Column field="nombre" header="Nombre"></Column>
+        <Column field="titulo" header="Titulo"></Column>
+        <Column field="descripcion" header="Descripcion"></Column>
+        <Column header="Imagen">
+          <template #body="props">
+            <img :src="getImageUrl(props.data.imagenUrl)" alt="Imagen de la obra" style="width: 75px; height: auto; border-radius: 8px;" />
+          </template>
+        </Column>
         <Column header="Acciones">
           <template #body="props">
             <span class="block">
@@ -40,6 +46,7 @@
   import { Icon } from "@iconify/vue"
   import IconPlus from '@/components/icons/IconPlus.vue'
   
+  
   import { watch, ref } from "vue";
   import DataTable from "primevue/datatable";
   import Column from "primevue/column";
@@ -56,6 +63,11 @@
 
   const applyFilters = (newFilters:any) => {
     filters.value = newFilters;
+  };
+  const baseUrl = import.meta.env.VITE_APP_URL;
+
+  const getImageUrl = (path:any) => {
+    return `${baseUrl}${path}`;
   };
 
   const loadObras = async () => {
