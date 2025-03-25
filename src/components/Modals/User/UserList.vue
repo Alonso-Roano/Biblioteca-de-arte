@@ -24,7 +24,7 @@
                 <Icon icon="mdi:pencil-outline" width="24" height="24" />
               </Button>
               <Button icon="pi pi-trash" severity="danger" variant="text" rounded aria-label="Eliminar"
-                @click="$emit('delete-user', props.data.id)">
+                @click="$emit('delete-user', props.data)">
                 <Icon icon="material-symbols:delete" width="24" height="24" />
               </Button>
             </span>

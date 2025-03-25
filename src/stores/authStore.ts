@@ -109,9 +109,11 @@ export const useAuthStore = defineStore("auth", {
           this.setUserFromToken(response.data.accessToken);
         } else {
           console.error("Error al refrescar el token, respuesta incompleta.");
+          this.logout();
         }
       } catch (error) {
         console.error("Error refrescando token", error);
+        this.logout()
       }
     },
 
