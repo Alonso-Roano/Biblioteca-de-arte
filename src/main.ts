@@ -22,6 +22,8 @@ app.use(PrimeVue, {
 })
 app.use(createPinia())
 app.use(router)
+app.use(ToastService)
+app.component('Toast', Toast)
 
 app.mount('#app')
 

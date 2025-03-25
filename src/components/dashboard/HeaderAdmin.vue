@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-[#5d20d3] border-gray-200  w-screen pr-3">
+  <nav class="bg-[#F4811B] border-gray-200  w-screen pr-3">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <!-- Logo -->
       <a href="#" class="flex items-center space-x-3">
@@ -49,7 +49,7 @@
             </li>
             <li>
               <button @click="logout"
-                class="block px-4 py-2 text-md  rounded-sm text-[#fff] hover:bg-[#4d10c3] my-1 md:my-0 w-full text-left cursor-pointer">
+                class="block px-4 py-2 text-md  rounded-sm text-[#fff] hover:bg-[rgb(244,114,27)] my-1 md:my-0 w-full text-left cursor-pointer">
                 Cerrar sesión
               </button>
             </li>
@@ -70,7 +70,7 @@
 
       <!-- Botón de login fuera del menú -->
       <template v-if="!isAuthenticated && !isMobile">
-        <a href="/login" class="block px-4 py-2 text-md text-[#5d20d3] bg-[#fff] hover:bg-[#eee] rounded my-1 md:my-0 cursor-pointer">
+        <a href="/login" class="block px-4 py-2 text-md text-[#F4811B] bg-[#fff] hover:bg-[#eee] rounded my-1 md:my-0 cursor-pointer">
           Iniciar sesión
         </a>
       </template>
