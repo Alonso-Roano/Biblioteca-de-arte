@@ -19,7 +19,7 @@ const fetchObras = async () => {
 
 // Función para redirigir a la vista de detalles
 const verDetalles = (id: string) => {
-  router.push({ name: 'DetalleObra', params: { id } });
+  router.push({ path: `/DetalleProducto/${id}` });
 };
 
 onMounted(fetchObras);
