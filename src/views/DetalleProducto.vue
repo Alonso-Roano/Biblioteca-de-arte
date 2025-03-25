@@ -2,59 +2,92 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
-import { Galeria } from '@/interfaces/Galeria' 
-import axios from 'axios'
+import { apiRequest } from '@/api/apiClient'
+import endpoints from '@/api/endpoints'
 
 const route = useRoute()
 const router = useRouter()
 
-const producto = ref<Galeria | null>(null)
-const comentarios = ref<Galeria['comentarios']>([])
+const producto = ref<any>(null)
+const comentarios = ref<any[]>([])
+const nuevoComentario = ref({ texto: '' })
 const leGusta = ref(false)
 
-const nuevoComentario = ref({
-  texto: '',
-  usuario: 'Usuario Anónimo',
-  fecha: new Date().toLocaleDateString(),
-})
+// ✅ ID de la obra desde la ruta (como string, por si es un slug)
+const obraId = route.params.id as string
 
-// Obtener producto y comentarios desde la API Galeria
-const obtenerProducto = async () => {
-  console.log(route.params.id)
+// Para obtener datos de la obra
+const fetchObra = async () => {
   try {
-    const { data } = await axios.get<Galeria>(`http://localhost:3000/api/galeria/${route.params.id}`)
-    producto.value = data
-    comentarios.value = data.comentarios
+    const response = await apiRequest<Obra>("obra.obtener", { id: obraId })
+    producto.value = response
   } catch (error) {
-    console.error('Error al obtener datos del producto:', error)
+    console.error("Error al obtener la obra:", error)
   }
 }
 
-// Función toogle para "Me gusta"
-const toggleMeGusta = () => {
-  leGusta.value = !leGusta.value
+
+// Para obtener comentarios
+const fetchComentarios = async () => {
+  try {
+    const response = await apiRequest<Comentario[]>("comentario.listar", { id: obraId })
+    comentarios.value = response
+  } catch (error) {
+    console.error("Error al obtener comentarios:", error)
+  }
 }
 
-// Función para enviar comentarios
-const enviarComentario = () => {
-  if (nuevoComentario.value.texto.trim()) {
-    comentarios.value.push({
-      texto: nuevoComentario.value.texto.trim(),
-      usuario: nuevoComentario.value.usuario,
-      fecha: new Date().toLocaleDateString(),
-    })
+
+// ✅ Enviar comentario
+const enviarComentario = async () => {
+  try {
+    if (!nuevoComentario.value.texto.trim()) return
+
+    const payload = {
+      obraId,
+      texto: nuevoComentario.value.texto,
+    }
+
+    await apiRequest('comentario.crear', '/api/Comentario', payload)
     nuevoComentario.value.texto = ''
+    await fetchComentarios()
+  } catch (error) {
+    console.error('Error al enviar comentario:', error)
   }
 }
 
-// Volver a la tienda
+// ✅ Alternar "Me gusta"
+const toggleMeGusta = async () => {
+  try {
+await apiRequest("like.toggle", { libroId: obraId })
+
+  } catch (error) {
+    console.error('Error al dar like:', error)
+  }
+}
+
+// ✅ Verificar si le gusta
+const verificarLike = async () => {
+  try {
+const response = await apiRequest<LikeInfo>("like.likesInfo", { libroId: obraId })
+leGusta.value = response.usuarioDioLike
+  } catch (error) {
+    console.error('Error al verificar like:', error)
+  }
+}
+
+// ✅ Regresar a inicio
 const regresar = () => {
   router.push('/')
 }
 
-// Obtener los datos al cargar el componente
-onMounted(obtenerProducto)
+onMounted(async () => {
+  await fetchObra()
+  await fetchComentarios()
+  await verificarLike()
+})
 </script>
+
 
 
 <template>
