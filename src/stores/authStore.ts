@@ -84,15 +84,13 @@ export const useAuthStore = defineStore("auth", {
     setTokens(token: string, refreshToken: string) {
       this.token = token;
       this.refreshToken = refreshToken;
-      localStorage.setItem("refreshToken", refreshToken);
       Cookies.set("token", token, { secure: true, sameSite: "Strict" });
       Cookies.set("refreshToken", refreshToken, { secure: true, sameSite: "Strict" });
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
 
     async refreshTokenAsync() {
-      console.log(localStorage.getItem("refreshToken"))
-      const sendToken = localStorage.getItem("refreshToken");
+      const sendToken = Cookies.get("refreshToken");
       try {
         const response: AxiosResponse = await axios.post(import.meta.env.VITE_APP_URL+"api/Auth/refresh", {
           token: sendToken,
@@ -114,7 +112,6 @@ export const useAuthStore = defineStore("auth", {
         this.refreshToken = null;
         this.user = null;
         Cookies.remove("token");
-        localStorage.removeItem("refreshToken")
         Cookies.remove("refreshToken");
         delete axios.defaults.headers.common["Authorization"];
         this.status = "unauthorized";
