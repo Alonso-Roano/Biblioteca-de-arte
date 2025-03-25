@@ -7,185 +7,81 @@ import { Button, Dialog, InputText, Checkbox, Toast } from 'primevue'
 import { apiRequest } from '@/api/apiClient'
 import { Icon } from "@iconify/vue"
 
-const showModalEdit = ref(false)
+import { useAuthStore } from '@/stores/authStore'
+import { useObraStore } from '@/stores/ObraStore'
+
+const authStore = useAuthStore()
+const obraStore = useObraStore()
+
+// const showModalEdit = ref(false)
 const books = ref([])
 const loading = ref(true)
-const bookIdDelete = ref<string | number>("")
-const confirmDeleteModal = ref(false)
+// const confirmDeleteModal = ref(false)
 
-const showModalView = ref(false)
-const bookView = ref({
+const obraModal = ref(false)
+const obra = ref({
+  isDeleted: false,
   titulo: '',
   descripcion: '',
-  slug: '',
-  fechaPublicacion: '',
-  autorNombre: '',
-  color: '',
-  etiquetaIds: []
+  precio: 0,
+  imagenUrl: '',
+  artistaId: 0,
+  categoriaIds: []
 })
 
-const viewBook = (book: any) => {
-  bookView.value = { ...book }
-  showModalView.value = true
-}
-
-const showModal = ref(false)
-const newBook = ref({
-  titulo: '',
-  descripcion: '',
-  slug: '',
-  fechaPublicacion: new Date().toISOString(),
-  autorId: 0,
-  color: '#ffffff',
-  etiquetaIds: []
-})
-
-const bookEdit = ref({
-  id: 0,
-  titulo: '',
-  descripcion: '',
-  slug: '',
-  fechaPublicacion: '',
-  autorId: 0,
-  color: '#ffffff',
-  etiquetaIds: []
-})
-
-const etiquetas = ref([
-  { id: 1, nombre: 'Fantasía' },
-  { id: 2, nombre: 'Ciencia Ficción' },
-  { id: 3, nombre: 'Romántico' }
-])
-
-const autores = ref([])
-
-const fetchEtiquetas = async () => {
-  try {
-    etiquetas.value = await apiRequest("etiqueta.listar"); 
-  } catch (error) {
-    console.log(error)
-  }
-}
-const fetchAutores = async () => {
-  try {
-    autores.value = await apiRequest("usuario.listar"); 
-  } catch (error) {
-    console.log(error)
-  }
-}
+// const showModal = ref(false)
 
 const toast = ref()
 
-const fetchBooks = async () => {
+const categorias = ref([])
+const categoriasSeleccionadas = ref([])
+
+// const handleFileChange = (e) => {
+//   obra.value.imagenUrl = e.target.files[0]
+// }
+
+const handleSubmit = async () => {
+
+  const artistaId = authStore.IdArtista;
+  // console.log(artistaId);
+
+  if (!artistaId) {
+    alert('Faltan datos requeridos')
+    return
+  }
+
+  const obraData = {
+    titulo: obra.value.titulo,
+    descripcion: obra.value.descripcion,
+    precio: parseFloat(obra.value.precio.toFixed(2)),
+    artistaId,
+    imagenUrl: obra.value.imagenUrl,
+    categoriaIds: [...categoriasSeleccionadas.value],
+    isDeleted: false
+  }
+
+  const idObra = await obraStore.crearObra(obraData)
+
+  if (idObra) {
+    await obraStore.subirImagenObra(idObra, obra.value.imagenUrl)
+    alert('Obra creada exitosamente')
+  }
+}
+
+const fetchCategorias = async () => {
   try {
-    books.value = await apiRequest("libro.listar")
+    categorias.value = await apiRequest("categoria.listar")
+    // console.log(categorias.value);
+
   } catch (error) {
     console.log(error)
   }
 }
 
 onMounted(() => {
-  fetchEtiquetas();
-  fetchAutores();
-  fetchBooks();
+  fetchCategorias()
 })
 
-const createBook = async () => {
-  if (!newBook.value.titulo || !newBook.value.descripcion || !newBook.value.slug || !newBook.value.autorId) {
-    toast.value.add({
-      severity: 'warn',
-      summary: 'Campos incompletos',
-      detail: 'Todos los campos son obligatorios',
-      life: 3000,
-    })
-    return
-  }
-
-  try {
-    const autor = autores.value.find(a => a.id === newBook.value.autorId)
-    const response: any = await apiRequest("libro.crear", {}, { 
-      ...newBook.value, 
-      autorNombre: autor?.nombre
-    })
-    console.log(response);
-      toast.value.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Libro creado correctamente',
-        life: 3000,
-      })
-      showModal.value = false
-      fetchBooks()
-  } catch (error) {
-    toast.value.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'No se pudo crear el libro',
-      life: 3000,
-    })
-  }
-}
-
-const editBook = (book: any) => {
-  bookEdit.value = { ...book }
-  showModalEdit.value = true
-}
-
-const updateBook = async () => {
-  try {
-    const response: any = await apiRequest("libro.actualizar", { id: bookEdit.value.id }, { ...bookEdit.value })
-    if (response.id) {
-      toast.value.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Libro editado correctamente',
-        life: 3000,
-      })
-      showModalEdit.value = false
-      fetchBooks()
-    } else {
-      throw new Error('Error al actualizar el libro')
-    }
-  } catch (error) {
-    toast.value.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'No se pudo actualizar el libro',
-      life: 3000,
-    })
-  }
-}
-
-const deleteBook = (id: any) => {
-  bookIdDelete.value = id
-  confirmDeleteModal.value = true
-}
-
-const removeBook = async () => {
-  try {
-    const response: any = await apiRequest("libro.eliminar", { id: bookIdDelete.value })
-    if (response.message) {
-      toast.value.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Libro eliminado correctamente',
-        life: 3000,
-      })
-      fetchBooks()
-    } else {
-      throw new Error('Error al eliminar el libro')
-    }
-  } catch (error) {
-    toast.value.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'No se pudo eliminar el libro',
-      life: 3000,
-    })
-  } finally {
-    confirmDeleteModal.value = false
-  }
-}
 </script>
 
 <template>
@@ -194,7 +90,7 @@ const removeBook = async () => {
       <div class="py-4 m-2">
         <div class="flex w-full justify-between mb-1.5">
           <h2 class="block text-2xl text-gray-600 p-2 font-semibold">Libros</h2>
-          <div @click="showModal = true"
+          <div @click="obraModal = true"
             class="flex items-center gap-0.5 rounded-md py-0.5 px-1 bg-blue-500 text-white w-fit font-semibold ml-1 my-1 cursor-pointer">
             <Icon icon="akar-icons:plus" width="24" height="24" />
             <button>Añadir</button>
@@ -208,7 +104,8 @@ const removeBook = async () => {
           <Column field="slug" header="Slug"></Column>
           <Column field="color" header="Color">
             <template #body="props">
-              <div :style="{ backgroundColor: props.data.color, width: '24px', height: '24px', borderRadius: '4px', border: '1px solid #ccc' }">
+              <div
+                :style="{ backgroundColor: props.data.color, width: '24px', height: '24px', borderRadius: '4px', border: '1px solid #ccc' }">
               </div>
             </template>
           </Column>
@@ -216,7 +113,7 @@ const removeBook = async () => {
           <Column header="Acciones">
             <template #body="props">
               <span class="block">
-                <Button icon="pi pi-eye" variant="text" rounded aria-label="Ver" @click="viewBook(props.data)">
+                <!-- <Button icon="pi pi-eye" variant="text" rounded aria-label="Ver" @click="viewBook(props.data)">
                   <Icon icon="akar-icons:info-fill" width="24" height="24" />
                 </Button>
                 <Button icon="pi pi-pencil" variant="text" severity="info" rounded aria-label="Editar"
@@ -226,55 +123,46 @@ const removeBook = async () => {
                 <Button icon="pi pi-trash" severity="danger" variant="text" rounded aria-label="Eliminar"
                   @click="deleteBook(props.data.id)" >
                   <Icon icon="material-symbols:delete" width="24" height="24" />
-                </Button>
+                </Button> -->
               </span>
             </template>
           </Column>
         </DataTable>
       </div>
 
-      <Dialog v-model:visible="showModalView" header="Detalles del Libro" :modal="true" style="background-color: #fff;">
-  <div class="flex flex-col gap-4">
-    <div>
-      <label class="block text-gray-600">Título</label>
-      <InputText v-model="bookView.titulo" class="w-full" disabled />
-    </div>
-    <div>
-      <label class="block text-gray-600">Descripción</label>
-      <InputText v-model="bookView.descripcion" class="w-full" disabled />
-    </div>
-    <div>
-      <label class="block text-gray-600">Slug</label>
-      <InputText v-model="bookView.slug" class="w-full" disabled />
-    </div>
-    <div>
-      <label class="block text-gray-600">Fecha de Publicación</label>
-      <InputText v-model="bookView.fechaPublicacion" class="w-full" disabled />
-    </div>
-    <div>
-      <label class="block text-gray-600">Autor</label>
-      <InputText v-model="bookView.autorNombre" class="w-full" disabled />
-    </div>
-    <div>
-      <label class="block text-gray-600">Color</label>
-      <div :style="{ backgroundColor: bookView.color, width: '100%', height: '24px', borderRadius: '4px', border: '1px solid #ccc' }">
-      </div>
-    </div>
-    <div>
-      <label class="block text-gray-600">Etiquetas</label>
-      <div class="flex flex-wrap gap-2">
-        <span v-for="etiquetaId in bookView.etiquetaIds" :key="etiquetaId" class="px-2 py-1 bg-blue-200 rounded">
-          {{ etiquetas.find(e => e.id === etiquetaId)?.nombre || 'Etiqueta desconocida' }}
-        </span>
-      </div>
-    </div>
-    <div class="flex justify-end">
-      <Button label="Cerrar" severity="secondary" @click="showModalView = false" />
-    </div>
-  </div>
-</Dialog>
+      <Dialog v-model:visible="obraModal" header="Crear obra" :modal="true" style="background-color: #fff;">
+        <form @submit.prevent="handleSubmit">
+          <div class="flex flex-col gap-4">
+          <div>
+            <label class="block text-gray-600">Título</label>
+            <InputText v-model="obra.titulo" class="w-full" />
+          </div>
+          <div>
+            <label class="block text-gray-600">Descripción</label>
+            <InputText v-model="obra.descripcion" class="w-full" />
+          </div>
+          <div>
+            <label class="block text-gray-600">Precio</label>
+            <input type="number" v-model="obra.precio" class="w-full" />
+          </div>
+          <div>
+            <label class="block text-gray-600">Imagen</label>
+            <InputText v-model="obra.imagenUrl" class="w-full" />
+          </div>
+          <h3>Categorías:</h3>
+          <label v-for="categoria in categorias.data" :key="categoria.id">
+            <input type="checkbox" :value="categoria.id" v-model="categoriasSeleccionadas" />
+            {{ categoria.nombre }}
+          </label>
+          <div class="flex justify-end">
+            <Button label="Crear" severity="secondary" type="submit" @click="obraModal = false" />
+            <Button label="Cerrar" severity="secondary" @click="obraModal = false" />
+          </div>
+        </div>
+        </form>
+      </Dialog>
       <!-- Modal de creación -->
-      <Dialog v-model:visible="showModal" header="Crear Libro" :modal="true">
+      <!-- <Dialog v-model:visible="showModal" header="Crear Libro" :modal="true">
         <div class="flex flex-col gap-4">
           <div>
             <label class="block text-gray-600">Título</label>
@@ -313,10 +201,10 @@ const removeBook = async () => {
             <Button label="Crear" severity="success" @click="createBook" />
           </div>
         </div>
-      </Dialog>
+      </Dialog> -->
 
       <!-- Modal de edición -->
-      <Dialog v-model:visible="showModalEdit" header="Editar Libro" :modal="true">
+      <!-- <Dialog v-model:visible="showModalEdit" header="Editar Libro" :modal="true">
         <div class="flex flex-col gap-4">
           <div>
             <label class="block text-gray-600">Título</label>
@@ -355,10 +243,10 @@ const removeBook = async () => {
             <Button label="Guardar" severity="success" @click="updateBook" />
           </div>
         </div>
-      </Dialog>
+      </Dialog> -->
 
       <!-- Modal para eliminación -->
-      <Dialog v-model:visible="confirmDeleteModal" header="Confirmar Eliminación" :modal="true">
+      <!-- <Dialog v-model:visible="confirmDeleteModal" header="Confirmar Eliminación" :modal="true">
         <div class="p-4 text-gray-600">
           <p>¿Estás seguro de que deseas eliminar este libro?</p>
           <div class="flex justify-end gap-2 mt-4">
@@ -366,7 +254,7 @@ const removeBook = async () => {
             <Button label="Eliminar" severity="danger" @click="removeBook" />
           </div>
         </div>
-      </Dialog>
+      </Dialog> -->
       <Toast ref="toast" />
     </template>
   </LayoutDashboard>

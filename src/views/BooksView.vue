@@ -14,9 +14,9 @@ interface Libro {
 }
 
 const libros = ref<Libro[]>([]);
-const mensajeNoEncontrado = ref(''); 
+const mensajeNoEncontrado = ref('');
 const buscarTag = ref('');
-const paginaActual = ref(1); 
+const paginaActual = ref(1);
 const librosPorPagina = 10;
 
 const buscarAutor = (autor: string) => { return "/Libros?buscar=autor&value=" + autor; }
@@ -56,7 +56,7 @@ const cargarLibros = async () => {
     if (libros.value.length === 0) {
       mensajeNoEncontrado.value = `No se encontraron ${buscar} con el valor de "${value}".`;
     } else {
-      mensajeNoEncontrado.value = ''; 
+      mensajeNoEncontrado.value = '';
     }
   } catch (error) {
     console.error("Error cargando libros:", error);

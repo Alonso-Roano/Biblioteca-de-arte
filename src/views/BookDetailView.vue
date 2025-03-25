@@ -57,7 +57,7 @@ const toggleLike = async () => {
   if (!libro.value) return;
   try {
     await apiRequest("like.toggle", { libroId: libro.value.id, token: Cookies.get("token") });
-    await cargarLikes(); 
+    await cargarLikes();
   } catch (error) {
     console.error("Error al dar/quitar like:", error);
   }
@@ -113,7 +113,7 @@ onMounted(async () => {
         <div v-else class="text-center text-red-500">Cargando libro...</div>
 
         <!-- Botón de Like con color dinámico -->
-        <button 
+        <button
           @click="toggleLike"
           :class="usuarioDioLike ? 'text-lg text-red-600 hover:text-red-700' : 'text-lg text-red-600 hover:text-red-700'"
           class=" font-bold py-2 px-4 rounded mt-4 transition absolute top-0 right-5 cursor-pointer"

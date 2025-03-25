@@ -19,7 +19,7 @@ const libros = ref<Libro[]>([]);
 const mensajeNoEncontrado = ref('');
 const buscarTag = ref('');
 const paginaActual = ref(1);
-const librosPorPagina = 10; 
+const librosPorPagina = 10;
 
 const buscarAutor = (autor: string) => { return "/Libros?buscar=autor&value=" + autor; }
 
@@ -70,7 +70,7 @@ onMounted(() => {
               </div>
 
               <div class="flex w-full flex-wrap mx-8">
-                
+
               </div>
             </div>
             <div class="back"></div>

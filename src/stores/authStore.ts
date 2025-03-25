@@ -161,6 +161,16 @@ export const useAuthStore = defineStore("auth", {
     async register(nombres: string, apellidos: string, email: string, password: string, confirmPassword:string, artista:boolean = false ) {
       this.status = "pending";
       try {
+        console.log(
+          {
+            id:"0",
+          email,
+          nombres,
+          apellidos,
+          password,
+          confirmPassword
+        });
+
         const response: any = await apiRequest(artista ? "auth.registerArtist":"auth.registerUser", {}, {
           id:"0",
           email,

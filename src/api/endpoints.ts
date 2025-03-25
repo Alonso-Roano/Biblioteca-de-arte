@@ -91,9 +91,14 @@ const endpoints = {
     listar: { method: 'GET', url: '/api/Obra' },
     obtener: { method: 'GET', url: '/api/Obra/{id}' },
     crear: { method: 'POST', url: '/api/Obra' },
+    crearObra: { method: 'POST', url: '/api/Obra/CrearObra' },
+    crearImagenObra: { method: 'POST', url: '/api/SubirImagenObra/{idObra}' },
     actualizar: { method: 'PUT', url: '/api/Obra/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Obra/{id}' },
     filtrar: { method: 'GET', url: '/api/Obra/filter' },
+  },
+  categoria: {
+    listar: { method: 'GET', url: '/api/Categoria' },
   },
 }
 
