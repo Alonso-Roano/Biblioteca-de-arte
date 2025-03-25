@@ -38,7 +38,7 @@ watch(
 )
 
 const guardarCambios = async () => {
-  if (!nombres.value || !apellidos.value || edad.value === null || !pais.value || !biografia.value || !contraseña.value) {
+  if (!nombres.value || !apellidos.value || edad.value === null || !pais.value || !biografia.value) {
     toast.add({
       severity: 'warn',
       summary: 'Campos incompletos',

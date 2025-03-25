@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useArtistProfileStore } from '@/stores/ArtistProfileStore'
+import Button from 'primevue/button'
+import ExposicionModal from '@/views/Auth/Profile/components/ExposicionModal.vue'
 
 const artistStore = useArtistProfileStore()
+
+const modalVisible = ref(false)
+const exposicionActual = ref(null)
+
+const abrirCrearModal = () => {
+  exposicionActual.value = null
+  modalVisible.value = true
+}
 
 onMounted(() => {
   artistStore.fetchColeccionesArtista()
@@ -18,7 +28,7 @@ onMounted(() => {
     </div>
 
     <div v-else-if="artistStore.colecciones.length === 0">
-      <p>Aún no tienes exposiciones registradas </p>
+      <p>Aún no tienes exposiciones registradas</p>
     </div>
 
     <ul v-else class="space-y-4">
@@ -33,5 +43,15 @@ onMounted(() => {
         </p>
       </li>
     </ul>
+
+    <div class="mt-4">
+      <Button label="Nueva exposición" @click="abrirCrearModal" />
+    </div>
+
+    <ExposicionModal
+      v-model="modalVisible"
+      :exposicion="exposicionActual"
+      @onSuccess="artistStore.fetchColeccionesArtista"
+    />
   </div>
 </template>

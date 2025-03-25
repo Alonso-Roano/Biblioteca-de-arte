@@ -9,7 +9,7 @@ interface ArtistProfile {
   apellidos: string
   edad: number
   pais: string
-  bigrafia: string
+  biografia: string
   contraseña: string
 }
 
@@ -21,7 +21,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
   const obras = ref<any[]>([])
   const colecciones = ref<any[]>([])
   const authStore = useAuthStore()
-  const userId = authStore.user?.id
+  const userId = authStore.user?.id as string | number
   const IdArtista = authStore.IdArtista as string | number
 
 
@@ -179,7 +179,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
         }
       }>('exposicion.filtrar', {
         orderDirection: 'asc',
-        filterField: 'idArtista',
+        filterField: 'IdArtista',
         filterValue: IdArtista,
       })
 
@@ -195,6 +195,43 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
     }
   }
 
+  const crearExposicionYAsignarObras = async (
+    exposicionData: { nombre: string; fechaInicio: string; fechaFin: string },
+    idsObras: number[]
+  ) => {
+    try {
+      const response = await apiRequest<{ id: number }>('exposicion.crear', {}, exposicionData)
+      const idExposicion = response.id
+
+      for (const idObra of idsObras) {
+        await apiRequest('obra.exposicionCrear', {}, { idObra, idExposicion })
+      }
+      await fetchColeccionesArtista()
+    } catch (error) {
+      console.error('Error al crear exposición y asignar obras:', error)
+
+    }
+  }
+
+  const editarExposicionYAsignarObras = async (
+    idExposicion: number,
+    exposicionData: { nombre: string; fechaInicio: string; fechaFin: string },
+    idsObras: number[]
+  ) => {
+    try {
+      await apiRequest('exposicion.actualizar', { id: idExposicion }, exposicionData)
+
+      for (const idObra of idsObras) {
+        await apiRequest('obra.exposicionCrear', {}, { idObra, idExposicion })
+      }
+
+      await fetchColeccionesArtista()
+    } catch (error) {
+      console.error('Error al editar exposición:', error)
+    }
+  }
+
+
 
   return {
     artistProfile,
@@ -207,6 +244,8 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
     obras,
     fetchObrasArtista,
     colecciones,
-    fetchColeccionesArtista
+    fetchColeccionesArtista,
+    crearExposicionYAsignarObras,
+    editarExposicionYAsignarObras
   }
 })

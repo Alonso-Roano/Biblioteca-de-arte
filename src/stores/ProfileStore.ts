@@ -58,7 +58,6 @@ export const useProfileStore = defineStore('profile', () => {
   }
 
   const fetchUserComments = async () => {
-
     if (!userId) {
       console.warn('No hay usuario autenticado para obtener comentarios.')
       return
@@ -86,7 +85,36 @@ export const useProfileStore = defineStore('profile', () => {
       })
 
       if (response.success) {
-        userComments.value = response.data.items
+        const enrichedComments = await Promise.all(
+          response.data.items.map(async (comentario) => {
+            try {
+              const obraData = await apiRequest<{
+                success: boolean
+                message: string
+                data: {
+                  id: number
+                  titulo: string
+                  descripcion: string
+                  imagenUrl: string
+                  slug: string
+                }
+              }>('obra.obtener', { id: comentario.idObra })
+
+              return {
+                ...comentario,
+                obra: obraData.success ? obraData.data : null,
+              }
+            } catch (err) {
+              console.error(`Error al obtener la obra con id ${comentario.idObra}`, err)
+              return {
+                ...comentario,
+                obra: null,
+              }
+            }
+          })
+        )
+
+        userComments.value = enrichedComments
       } else {
         console.warn('No se pudieron obtener los comentarios:', response.message)
       }
@@ -96,6 +124,7 @@ export const useProfileStore = defineStore('profile', () => {
       loading.value = false
     }
   }
+
 
   const fetchProfile = async () => {
 
