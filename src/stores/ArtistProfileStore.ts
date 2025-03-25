@@ -20,10 +20,17 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
   const artistaComentarios = ref<any[]>([])
   const obras = ref<any[]>([])
   const colecciones = ref<any[]>([])
+  const authStore = useAuthStore()
+  const userId = authStore.user?.id
+  const IdArtista = authStore.IdArtista as string | number
+
 
   const fetchArtistProfile = async () => {
-    const authStore = useAuthStore()
-    const userId = authStore.user?.id
+
+    if (!userId) {
+      console.warn('No hay ID de usuario.')
+      return
+    }
 
     if (!userId) {
       console.warn('No hay ID de usuario.')
@@ -36,7 +43,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
         success: boolean
         message: string
         data: ArtistProfile
-      }>('artista.obtener', { id: userId })
+      }>('artista.obtener', { id: IdArtista })
 
       if (response.success) {
         artistProfile.value = response.data
@@ -58,8 +65,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
     try {
       loading.value = true
 
-      await apiRequest('artista.actualizar', { id: artistProfile.value.id }, updated)
-
+      await apiRequest('artista.actualizar', { id: userId as string | number }, updated)
       artistProfile.value = {
         ...artistProfile.value,
         ...updated,
@@ -114,7 +120,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
 
   const fetchObrasArtista = async () => {
     const authStore = useAuthStore()
-    const artistaId = authStore.user?.id
+    const artistaId = authStore.IdArtista
 
     if (!artistaId) {
       console.warn('No hay ID de artista')
@@ -155,13 +161,6 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
   }
 
   const fetchColeccionesArtista = async () => {
-    const authStore = useAuthStore()
-    const artistaId = authStore.user?.id
-
-    if (!artistaId) {
-      console.warn('No hay ID de artista para exposiciones')
-      return
-    }
 
     try {
       loading.value = true
@@ -181,7 +180,7 @@ export const useArtistProfileStore = defineStore('artistProfile', () => {
       }>('exposicion.filtrar', {
         orderDirection: 'asc',
         filterField: 'idArtista',
-        filterValue: artistaId,
+        filterValue: IdArtista,
       })
 
       if (response.success) {
