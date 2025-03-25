@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { apiRequest } from '@/api/apiClient';
-import Search from '@/components/Search.vue';
+import Search from '@/components/SearchObra.vue';
 import { getTextColor } from '@/utils/functions';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
