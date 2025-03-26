@@ -89,6 +89,7 @@ const endpoints = {
   },
   obra: {
     listar: { method: 'GET', url: '/api/Obra' },
+    buscar: { method: "GET", url: "/api/Obra/buscar"},
     obtener: { method: 'GET', url: '/api/Obra/{id}' },
     crear: { method: 'POST', url: '/api/Obra' },
     actualizar: { method: 'PUT', url: '/api/Obra/{id}' },
