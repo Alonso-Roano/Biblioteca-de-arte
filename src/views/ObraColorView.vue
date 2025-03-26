@@ -1,4 +1,5 @@
 <template>
+
   <div class="p-8 bg-gray-100 min-h-screen space-y-10 bg-[#EEE9DF]">
 
     
@@ -100,12 +101,19 @@
 
 
   </div>
+  <Toast />
+
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
 import imageColor from '@/assets/images/imageColor.png';
 import imageColor2 from '@/assets/images/imageColor2.png';
+
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
+
 
 const localImages = [
   imageColor,
@@ -194,18 +202,43 @@ const handleFileUpload = (event) => {
   if (!input.files || input.files.length === 0) return;
 
   const file = input.files[0];
+
+  if (!file.type.startsWith("image/")) {
+    toast.add({
+      severity: 'error',
+      summary: 'Archivo no válido',
+      detail: 'Solo se permiten archivos de imagen.',
+      life: 3000
+    });
+    return;
+  }
+
   uploadedImage.value = URL.createObjectURL(file);
   processImage(file);
 };
 
+
+
 const handleFileDrop = (event) => {
   event.preventDefault();
   const file = event.dataTransfer.files[0];
-  if (file) {
-    uploadedImage.value = URL.createObjectURL(file);
-    processImage(file);
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    toast.add({
+      severity: 'error',
+      summary: 'Archivo no válido',
+      detail: 'Solo se permiten archivos de imagen.',
+      life: 3000
+    });
+    return;
   }
+
+  uploadedImage.value = URL.createObjectURL(file);
+  processImage(file);
 };
+
 
 const processImage = (file) => {
   const img = new Image();
