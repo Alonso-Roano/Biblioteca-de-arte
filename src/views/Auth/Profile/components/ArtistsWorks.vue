@@ -99,6 +99,8 @@ onMounted(() => {
         :key="obra.id"
         class="border rounded-lg overflow-hidden shadow-sm bg-white"
       >
+      <RouterLink :to="'/DetalleProducto/'+obra.slug">
+        
         <img
           :src="getImageUrl(obra.imagenUrl) || 'https://via.placeholder.com/400x200?text=Sin+imagen'"
           alt="Imagen de la obra"
@@ -128,6 +130,7 @@ onMounted(() => {
             />
           </div>
         </div>
+      </RouterLink>
       </div>
     </div>
 

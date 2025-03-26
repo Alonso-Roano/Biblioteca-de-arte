@@ -50,9 +50,9 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: '/DetalleProducto',
+      path: '/DetalleProducto/:slug',
       name: 'Detalle de producto',
-      meta: { menu: true, title: 'Detalle de producto' },
+      meta: { requiresAuth: true, title: 'Detalle de producto' },
       component: DetalleProducto,
     },
     {
@@ -62,28 +62,22 @@ const router = createRouter({
       component: RegisterView,
     },
     {
-      path: '/registerArtist',
-      name: 'registerArtist',
-      meta: { menu: false, title: 'RegisterArtist' },
-      component: RegisterArtistView,
-    },
-    {
       path: '/myprofile',
       name: 'myprofile',
-      meta: { menu: true,requiresAuth: true, title: 'Mi perfil', roles: ['Usuario'] },
+      meta: { menu: true, requiresAuth: true, requiresUser: true, title: 'Mi perfil', roles: ['Usuario','Admin'] },
       component: ProfileView,
     },
     {
       path: '/myprofileArtist',
       name: 'myprofileArtist',
-      meta: { menu: true, requiresAuth: true, title: 'Mi perfil de Artista', roles: ['Artista'] },
+      meta: { menu: true, requiresAuth: true, requiresArtist:true, title: 'Mi perfil de Artista', roles: ['Artista'] },
       component: ProfileArtist,
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
-      meta: { requiresAuth: true, requiresAdmin: true, title: "Dashboard" },
+      meta: { menu: true, requiresAuth: true, requiresAdmin: true, title: "Dashboard", roles: ['Admin'] },
     },
     {
       path: '/dashboard/users',
@@ -162,16 +156,12 @@ router.beforeEach((to, from, next) => {
     next({ name: 'login' })
   } else if (to.meta.requiresAdmin && authStore.user?.rol !== 'Admin') {
     next({ name: 'home' })
+  } else if (to.meta.requiresUser && authStore.user?.rol !== 'Usuario') {
+    next({ name: 'home' })
+  } else if (to.meta.requiresArtist && authStore.user?.rol !== 'Artista') {
+    next({ name: 'home' })
   } else if ((to.name === 'login' || to.name === 'register') && authStore.status === 'authorized') {
     next({ name: 'home' })
-  } else if (to.name === 'libro-editar') {
-    const idAutor = to.params.idAutor
-    const userId = authStore.user?.id
-    if (idAutor !== userId?.toString()) {
-      next({ name: 'home' })
-    } else {
-      next()
-    }
   } else {
     next()
   }
