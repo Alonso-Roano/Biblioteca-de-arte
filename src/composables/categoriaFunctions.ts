@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { apiRequest } from '@/api/apiClient'
 
 export const Categorias = ref([])
+export const ListCategories = ref([])
 export const IdCategoriaDelete = ref<string | number>("")
 export const newCategoria = ref({ id:"", nombre: "", descripcionCategoria: "", nombreCorto:""})
 export const CategoriaEdit = ref({ id:0, nombre: "", descripcionCategoria: "", nombreCorto:""})
@@ -13,6 +14,15 @@ export const fetchCategorias = async (params:any = null) => {
     Categorias.value = Categoriaa.data
   } catch (error) {
     console.log(error)
+  }
+}
+export const fetchCategorias2 = async (params: any = {}) => {
+  try {
+    const response = <any> await apiRequest('categoria.listar', params)
+    console.log('Respuesta de la API (fetchCategorias2):', response)
+    ListCategories.value = response.data || []
+  } catch (error) {
+    console.error('Error al obtener categorías:', error)
   }
 }
 
@@ -51,7 +61,7 @@ export const updateCategoria = async (toast: any) => {
       toast.add({ severity: 'success', summary: 'Éxito', detail: 'Categoria Editado correctamente', life: 3000 })
     }
     await fetchCategorias({page:1,limit:5});
-    return true 
+    return true
   } else {
     toast.add({ severity: 'warn', summary: 'Campos incompletos', detail: 'Todos los campos son obligatorios', life: 3000 })
     return false
@@ -72,7 +82,7 @@ export const removeCategoria = async (toast: any) => {
       toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la Categoria', life: 3000 })
     }
     await fetchCategorias({page:1,limit:5});
-    return true 
+    return true
   } catch (error) {
     toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la Categoriaa', life: 3000 })
     return false
