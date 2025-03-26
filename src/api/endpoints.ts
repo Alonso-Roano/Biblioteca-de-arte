@@ -1,4 +1,3 @@
-
 const endpoints = {
   auth: {
     registerUser: { method: 'POST', url: '/api/Auth/registrarUsuario' },
@@ -95,6 +94,7 @@ const endpoints = {
     actualizar: { method: 'PUT', url: '/api/Obra/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Obra/{id}' },
     filtrar: { method: 'GET', url: '/api/Obra/filter' },
+    exposicion: {method: 'GET', URL: '/api/Obra/exposicion/listar/{id}' },
   },
 }
 
