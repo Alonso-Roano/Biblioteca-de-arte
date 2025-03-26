@@ -170,12 +170,12 @@ const guardarCambios = async () => {
               <li
                 v-for="comentario in profileStore.userComments"
                 :key="comentario.id"
-                class="p-4 bg-gray-100 rounded-lg shadow-sm"
+                class="p-4 bg-gray-100 rounded-lg shadow-sm relative"
               >
 
-                <h3 class="text-base font-semibold text-[#F4811B]">
+                <RouterLink :to="'/DetalleProducto/'+comentario.obra?.slug"><h3 class="text-base font-semibold text-[#F4811B]">
                   {{ comentario.obra?.titulo || 'Obra desconocida' }}
-                </h3>
+                </h3></RouterLink>
 
                 <p class="text-sm text-gray-700 mt-1">
                   {{ comentario.texto }}

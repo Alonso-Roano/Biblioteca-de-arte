@@ -6,5 +6,7 @@ export default interface User {
   alias: string,
   rol:string,
   perfil:string,
-  password: string | null
+  password: string | null,
+  idUsuario?: number | null,
+  idArtista?: number | null,
 }
