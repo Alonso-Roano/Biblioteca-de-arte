@@ -1,4 +1,3 @@
-
 const endpoints = {
   auth: {
     registerUser: { method: 'POST', url: '/api/Auth/registrarUsuario' },
@@ -91,16 +90,17 @@ const endpoints = {
   },
   obra: {
     listar: { method: 'GET', url: '/api/Obra' },
+    buscar: { method: "GET", url: "/api/Obra/buscar"},
     obtener: { method: 'GET', url: '/api/Obra/{id}' },
     crear: { method: 'POST', url: '/api/Obra/CrearObra' },
     actualizar: { method: 'PUT', url: '/api/Obra/EditarObra/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Obra/{id}' },
     filtrar: { method: 'GET', url: '/api/Obra/filter' },
+    exposicion: {method: 'GET', url: '/api/Obra/exposicion/listar/{id }' },
     SubirImagenObra: { method: 'POST', url: '/api/Obra/SubirImagenObra/{idObra}' },
     ActualizarImagenObra: { method: 'PUT', url: '/api/Obra/ActualizarImagenObra/{idObra}' },
     EliminarImagenObra: { method: 'DELETE', url:"/api/Obra/EliminarImagenObra/{idObra}"},
     exposicionCrear: { method: 'POST', url:"/api/Obra/exposicion/crear"},
-    buscar: { method: "GET", url: "/api/Obra/buscar"},
   },
   categoria: {
     listar: { method: 'GET', url: '/api/Categoria' },

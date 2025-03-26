@@ -11,7 +11,8 @@ import DashboardProfile from '@/views/Dashboard/DashboardProfile.vue'
 import ErrorPage404 from '@/views/Errors/ErrorPage404.vue'
 import GalleryView from '@/views/GalleryView.vue'
 import DetalleProducto from '../views/DetalleProducto.vue'
-import RegisterArtistView from '@/views/Auth/RegisterView.vue'
+import ExposureView from '../views/ExposureView.vue'
+//import RegisterArtistView from '@/views/Auth/RegisterArtistView.vue'
 import ProfileView from '@/views/Auth/Profile/ProfileView.vue'
 import ProfileArtist from '@/views/Auth/Profile/ProfileArtist.vue'
 import DashboardArtists from '@/views/Dashboard/DashboardArtists.vue'
@@ -36,6 +37,12 @@ const router = createRouter({
       name: 'galeria',
       meta: { menu: true, title: 'Galeria' },
       component: GalleryView,
+    },
+    {
+      path: '/Exposiciones',
+      name: 'Exposiciones',
+      meta: { menu: true, title: 'Exposiciones' },
+      component: ExposureView
     },
     {
       path: '/ObraColor',
