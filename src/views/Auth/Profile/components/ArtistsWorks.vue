@@ -100,7 +100,7 @@ onMounted(() => {
         class="border rounded-lg overflow-hidden shadow-sm bg-white"
       >
       <RouterLink :to="'/DetalleProducto/'+obra.slug">
-        
+
         <img
           :src="getImageUrl(obra.imagenUrl) || 'https://via.placeholder.com/400x200?text=Sin+imagen'"
           alt="Imagen de la obra"
@@ -115,22 +115,23 @@ onMounted(() => {
           <p class="text-sm text-gray-800 font-medium">
             Precio: ${{ obra.precio.toFixed(2) }}
           </p>
-          <div class="flex gap-2 mt-2">
-            <Button
-              icon="pi pi-pencil"
-              class="p-button-sm"
-              :style="{ backgroundColor: '#F4811B', borderColor: '#F4811B', color: '#fff' }"
-              @click="() => openEditModal(obra)"
-            />
-            <Button
-              icon="pi pi-trash"
-              class="p-button-sm"
-              severity="danger"
-              @click="() => handleDelete(obra.id)"
-            />
-          </div>
+
         </div>
       </RouterLink>
+        <div class="flex items-center ml-5 gap-2 my-2">
+          <Button
+            icon="pi pi-pencil"
+            class="p-button-sm"
+            :style="{ backgroundColor: '#F4811B', borderColor: '#F4811B', color: '#fff' }"
+            @click.stop="() => openEditModal(obra)"
+          />
+          <Button
+            icon="pi pi-trash"
+            class="p-button-sm"
+            severity="danger"
+            @click.stop="() => handleDelete(obra.id)"
+          />
+        </div>
       </div>
     </div>
 
