@@ -19,13 +19,13 @@ export const fetchObras = async (params:any = null) => {
 }
 
 export const createObra = async ( toast:any) => {
-  if (!newObra.value.titulo || !newObra.value.descripcion || !newObra.value.precio || 
+  if (!newObra.value.titulo || !newObra.value.descripcion || !newObra.value.precio ||
       !newObra.value.artistaId || !newObra.value.categoriaIds?.length) {
-    toast.add({ 
-      severity: 'warn', 
-      summary: 'Campos incompletos', 
-      detail: 'Todos los campos son obligatorios', 
-      life: 3000 
+    toast.add({
+      severity: 'warn',
+      summary: 'Campos incompletos',
+      detail: 'Todos los campos son obligatorios',
+      life: 3000
     })
     return null
   }
@@ -35,11 +35,11 @@ export const createObra = async ( toast:any) => {
     const response = <any> await apiRequest("obra.crear", {}, obraSend)
     console.log(response)
     if (response) {
-      toast.add({ 
-        severity: 'success', 
-        summary: 'Éxito', 
-        detail: 'Obra creada correctamente', 
-        life: 3000 
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Obra creada correctamente',
+        life: 3000
       })
       if (newObra.value.imagen) {
         await uploadObraImage(response, newObra.value.imagen)
@@ -121,7 +121,7 @@ export const addExposicionesToObra = async (obraId: string | number, exposicione
   }
 
   try {
-    const requests = exposicionesIds.map((idExposicion:any) => 
+    const requests = exposicionesIds.map((idExposicion:any) =>
       apiRequest("obra.exposicionCrear", { idObra: obraId, idExposicion })
     );
 
@@ -156,10 +156,10 @@ export const updateObra = async (toast: any) => {
     const usuario = ObraEdit.value
     const res = <any> await apiRequest("obra.actualizar", { id: ObraEdit.value.id }, usuario)
     if (res) {
-      toast.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario Editado correctamente', life: 3000 })
+      toast.add({ severity: 'Editsuccess', summary: 'Éxito', detail: 'Usuario Editado correctamente', life: 3000 })
     }
     await fetchObras({page:1,limit:5});
-    return true 
+    return true
   } else {
     toast.add({ severity: 'warn', summary: 'Campos incompletos', detail: 'Todos los campos son obligatorios', life: 3000 })
     return false

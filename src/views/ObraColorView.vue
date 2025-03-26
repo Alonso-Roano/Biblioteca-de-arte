@@ -1,10 +1,10 @@
 <template>
   <div class="p-8 bg-gray-100 min-h-screen space-y-10 bg-[#EEE9DF]">
 
-    
+
     <div class="flex flex-col md:flex-row gap-8">
-      
-     
+
+
       <div class="flex-1 bg-white p-6 rounded-lg shadow-md space-y-6">
 
         <div>
@@ -13,7 +13,7 @@
   class="border-2 border-dashed border-gray-300 hover:border-blue-400 p-6 text-center rounded-md cursor-pointer transition-all flex flex-col justify-center items-center"
   @dragover.prevent
   @drop="handleFileDrop"
-  style="height: 300px;"> 
+  style="height: 300px;">
   <img src="https://static-00.iconduck.com/assets.00/upload-icon-2048x2048-eu9n5hco.png"
     alt="Upload Icon" class="w-12 h-12 mx-auto mb-2" />
   <p class="text-sm text-gray-600 mb-2">Haz clic o arrastra una imagen</p>
@@ -34,7 +34,7 @@
           </select>
         </div>
 
-        <div> 
+        <div>
           <label class="block mb-2 font-medium text-gray-700">Tipo de Material</label>
           <select v-model="selectedMaterial" @change="calculatePrice"
             class="w-full p-3 border border-gray-300 rounded-md text-sm focus:ring focus:ring-orange-300">
@@ -81,7 +81,7 @@
     Calculando precio...
   </div>
 </div>
- 
+
       </div>
     </div>
 
@@ -89,7 +89,7 @@
   <h3 class="text-lg font-semibold mb-4">Tus Obras</h3>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     <div v-for="(img, index) in localImages" :key="index"
-      @click="selectImage(img)" 
+      @click="selectImage(img)"
       class="border-2 rounded-md overflow-hidden transition-all cursor-pointer hover:shadow-lg"
       :class="uploadedImage === img ? 'border-blue-500' : 'border-gray-300'">
       <img :src="img" alt="Obra del artista" class="w-full h-40 object-cover" />
@@ -113,7 +113,7 @@ const localImages = [
 
 const selectImage = (img) => {
   uploadedImage.value = img;
-  processImage(img);  
+  processImage(img);
 };
 
 const paperSizes = {
@@ -150,35 +150,35 @@ const colors = {
 };
 
 const selectedSize = ref('carta');
-const selectedMaterial = ref('photo'); 
+const selectedMaterial = ref('photo');
 const quantity = ref(1);
 const colorPercentages = ref({ C: 0, M: 0, Y: 0, K: 0 });
 const canvas = ref(null);
 const uploadedImage = ref(null);
 
 const materialPrices = {
-  pvc: 15,       
-  canvas: 20,    
-  photo: 25,     
-  paper: 10      
+  pvc: 15,
+  canvas: 20,
+  photo: 25,
+  paper: 10
 };
 
 const totalPrice = computed(() => {
   const paperArea = paperSizes[selectedSize.value];
   const materialPrice = materialPrices[selectedMaterial.value];
-  
+
   if (!paperArea || !materialPrice) {
-    return 0; 
+    return 0;
   }
-  
+
   const { C, M, Y, K } = colorPercentages.value;
     const colorFactor = ((C / 100) + (M / 100) + (Y / 100) + (K / 100));
-  
+
   if (isNaN(colorFactor)) {
-    return 0; 
+    return 0;
   }
-  
-const unitPrice = materialPrice * (paperArea / 45) * colorFactor; 
+
+const unitPrice = materialPrice * (paperArea / 45) * colorFactor;
 
   return unitPrice * quantity.value;
 });
@@ -248,7 +248,7 @@ const processImage = (file) => {
     colorPercentages.value = percentages;
 
     // Se calcula el precio usando los colores calculados al cambiar
-    calculatePrice();  
+    calculatePrice();
   };
 };
 

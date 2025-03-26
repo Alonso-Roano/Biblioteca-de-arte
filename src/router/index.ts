@@ -12,7 +12,6 @@ import ErrorPage404 from '@/views/Errors/ErrorPage404.vue'
 import GalleryView from '@/views/GalleryView.vue'
 import DetalleProducto from '../views/DetalleProducto.vue'
 import ExposureView from '../views/ExposureView.vue'
-//import RegisterArtistView from '@/views/Auth/RegisterArtistView.vue'
 import ProfileView from '@/views/Auth/Profile/ProfileView.vue'
 import ProfileArtist from '@/views/Auth/Profile/ProfileArtist.vue'
 import DashboardArtists from '@/views/Dashboard/DashboardArtists.vue'
@@ -21,7 +20,8 @@ import DashboardLogError from '@/views/Dashboard/DashboardLogError.vue'
 import DashboardExposicion from '@/views/Dashboard/DashboardExposicion.vue'
 import DashboardObra from '@/views/Dashboard/DashboardObra.vue'
 import DashboardComentario from '@/views/Dashboard/DashboardComentario.vue'
-import ObraColor from '@/views/ObraColorView.vue'
+import ObraColorView from '@/views/ObraColorView.vue'
+import AddObraView from '@/views/AddObraView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,10 +45,16 @@ const router = createRouter({
       component: ExposureView
     },
     {
-      path: '/ObraColor',
-      name: 'ObraColor',
-      meta: { menu: true, requiresAuth: true, title: 'ObraColor', roles: ['Artista'] },
-      component: ObraColor,
+      path:'/color',
+      name:'Composición de color',
+      meta: { menu: true, requiresAuth: true, title: 'Composicion de color', roles: ['Artista'] },
+      component: ObraColorView
+    },
+    {
+      path:'/AddObra',
+      name:'Agregar Obra',
+      meta: { menu: true, requiresAuth: true, title: 'Agregar Obra', roles: ['Artista'] },
+      component: AddObraView
     },
     {
       path: '/login',

@@ -9,46 +9,46 @@
     <div class="flex flex-col gap-4">
       <div>
         <label class="block text-gray-600">Título*</label>
-        <InputText 
-          v-model="titulo" 
-          class="w-full" 
-          :class="{ 'p-invalid': errors.titulo }" 
+        <InputText
+          v-model="titulo"
+          class="w-full"
+          :class="{ 'p-invalid': errors.titulo }"
         />
         <small class="p-error">{{ errors.titulo }}</small>
       </div>
-      
+
       <div>
         <label class="block text-gray-600">Descripción*</label>
-        <Textarea 
-          v-model="descripcion" 
-          class="w-full" 
-          :class="{ 'p-invalid': errors.descripcion }" 
-          rows="3" 
+        <Textarea
+          v-model="descripcion"
+          class="w-full"
+          :class="{ 'p-invalid': errors.descripcion }"
+          rows="3"
         />
         <small class="p-error">{{ errors.descripcion }}</small>
       </div>
-      
+
       <div>
         <label class="block text-gray-600">Precio (USD)*</label>
-        <InputNumber 
-          v-model="precio" 
-          class="w-full" 
-          :class="{ 'p-invalid': errors.precio }" 
-          mode="currency" 
-          currency="USD" 
-          locale="en-US" 
+        <InputNumber
+          v-model="precio"
+          class="w-full"
+          :class="{ 'p-invalid': errors.precio }"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
         />
         <small class="p-error">{{ errors.precio }}</small>
       </div>
-      
+
       <div>
         <label class="block text-gray-600">Categorías*</label>
-        <MultiSelect 
-          v-model="categoriaIds" 
-          :options="categoria" 
-          optionLabel="nombre" 
-          optionValue="id" 
-          class="w-full" 
+        <MultiSelect
+          v-model="categoriaIds"
+          :options="categoria"
+          optionLabel="nombre"
+          optionValue="id"
+          class="w-full"
           :class="{ 'p-invalid': errors.categoriaIds }"
           placeholder="Seleccione categorías"
         />
@@ -140,7 +140,10 @@ watch(
     titulo.value = newObra.titulo || '';
     descripcion.value = newObra.descripcion || '';
     precio.value = newObra.precio || '';
-    categoriaIds.value = newObra.categoriaIds || '';
+    categoriaIds.value =
+      typeof newObra.categoriaIds === 'string'
+        ? newObra.categoriaIds.split(',').map(item => item.trim())
+        : newObra.categoriaIds || [];
   },
   { immediate: true }
 );
