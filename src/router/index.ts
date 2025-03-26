@@ -21,6 +21,7 @@ import DashboardExposicion from '@/views/Dashboard/DashboardExposicion.vue'
 import DashboardObra from '@/views/Dashboard/DashboardObra.vue'
 import DashboardComentario from '@/views/Dashboard/DashboardComentario.vue'
 import ObraColorView from '@/views/ObraColorView.vue'
+import AddObraView from '@/views/AddObraView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,8 +41,14 @@ const router = createRouter({
     {
       path:'/color',
       name:'Composición de color',
-      meta: { menu: true, requiresAuth: true, title: 'Agregar Obra', roles: ['Artista'] },
+      meta: { menu: true, requiresAuth: true, title: 'Composicion de color', roles: ['Artista'] },
       component: ObraColorView
+    },
+    {
+      path:'/AddObra',
+      name:'Agregar Obra',
+      meta: { menu: true, requiresAuth: true, title: 'Agregar Obra', roles: ['Artista'] },
+      component: AddObraView
     },
     {
       path: '/login',
