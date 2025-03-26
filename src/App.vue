@@ -7,7 +7,7 @@ import FooterComp from "@/components/FooterComp.vue";
 const route = useRoute();
 
 const hideHeader = computed(() => {
-  return ['login', 'register', 'dashboard', "dashboard-users", "dashboard-libros", "dashboard-etiquetas", "dashboard-likes", "dashboard-perfil", "registerArtist", "dashboard-artist", "dashboard-logAction", "dashboard-logError"].includes(route.name as string);
+  return ['login', 'register', 'dashboard', "dashboard-users", "dashboard-obra", "dashboard-categoria", "dashboard-likes", "dashboard-perfil", "registerArtist", "dashboard-artist", "dashboard-logAction", "dashboard-logError", "dashboard-exposicion", "dashboard-comentario"].includes(route.name as string);
 });
 </script>
 

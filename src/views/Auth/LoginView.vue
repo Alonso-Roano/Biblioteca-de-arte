@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore.ts'
 import { Icon } from '@iconify/vue'
 import Cristo from '../../assets/images/cristoredentor.webp'
 import { useToast } from 'primevue/usetoast'
-
+import * as yup from 'yup'
 const authStore = useAuthStore()
 const router = useRouter()
 const errorMessage = ref<null | string>(null)
@@ -16,60 +16,62 @@ const emailError = ref('')
 const passwordError = ref('')
 const toast = useToast()
 
-const validateEmail = (email: string): boolean => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return re.test(email)
-}
-
-const validatePassword = (password: string): boolean => {
-  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{10,}$/
-  return re.test(password)
-}
+const loginSchema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .email('Correo no válido')
+    .required('El correo es obligatorio'),
+  password: yup
+    .string()
+    .trim()
+    .required('La contraseña es obligatoria')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+      'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un carácter especial.'
+    )
+})
 
 const onSubmit = async () => {
-  // Limpiar errores anteriores
   emailError.value = ''
   passwordError.value = ''
 
-  // Validaciones
-  let valid = true
-
-  if (!email.value || !validateEmail(email.value)) {
-    emailError.value = 'Por favor ingresa un correo electrónico válido.'
-    valid = false
-  }
-
-  if (!password.value || !validatePassword(password.value)) {
-    passwordError.value =
-      'La contraseña debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un carácter especial.'
-    valid = false
-  }
-
-  if (!valid) return
-
-  // Login
   try {
-    await authStore.login(email.value, password.value)
-    errorMessage.value = null
+    const formData = await loginSchema.validate(
+      { email: email.value, password: password.value },
+      { abortEarly: false }
+    )
+
+    await authStore.login(formData.email, formData.password)
+
     toast.add({
       severity: 'success',
       summary: 'Inicio de sesión exitoso',
       detail: 'Bienvenido de nuevo.',
       life: 3000,
     })
+
     setTimeout(() => {
       router.push('/')
     }, 2000)
-  } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Ocurrió un error inesperado.'
-    toast.add({
-      severity: 'error',
-      summary: 'Error al iniciar sesión',
-      detail: errorMessage.value,
-      life: 4000,
-    })
+
+  } catch (err: any) {
+    if (err.name === 'ValidationError') {
+      err.inner.forEach((error: any) => {
+        if (error.path === 'email') emailError.value = error.message
+        if (error.path === 'password') passwordError.value = error.message
+      })
+    } else {
+      toast.add({
+        severity: 'error',
+        summary: 'Error al iniciar sesión',
+        detail: 'Error inesperado',
+        life: 4000,
+      })
+    }
   }
 }
+
 </script>
 
 <template>

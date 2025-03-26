@@ -31,14 +31,14 @@ watch(
       apellidos.value = perfil.apellidos
       edad.value = perfil.edad
       pais.value = perfil.pais
-      biografia.value = perfil.bigrafia
+      biografia.value = perfil.biografia
     }
   },
   { immediate: true }
 )
 
 const guardarCambios = async () => {
-  if (!nombres.value || !apellidos.value || edad.value === null || !pais.value || !biografia.value || !contraseña.value) {
+  if (!nombres.value || !apellidos.value || edad.value === null || !pais.value || !biografia.value) {
     toast.add({
       severity: 'warn',
       summary: 'Campos incompletos',
@@ -54,7 +54,7 @@ const guardarCambios = async () => {
       apellidos: apellidos.value,
       edad: edad.value,
       pais: pais.value,
-      bigrafia: biografia.value, // corregido el typo
+      biografia: biografia.value,
       contraseña: contraseña.value,
     })
 
@@ -101,12 +101,12 @@ const guardarCambios = async () => {
 
     <div>
       <label class="block text-sm font-medium mb-1">Biografía</label>
-      <Textarea v-model="biografia" autoResize rows="4" class="w-full" />
+      <Textarea placeholder="Escribe un poco sobre ti" v-model="biografia" autoResize rows="4" class="w-full" />
     </div>
 
     <div>
       <label class="block text-sm font-medium mb-1">Contraseña</label>
-      <InputText v-model="contraseña" type="password" class="w-full" />
+      <InputText placeholder="Escribe tu nueva contraseña" v-model="contraseña" type="password" class="w-full" />
     </div>
 
     <Button

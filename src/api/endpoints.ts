@@ -35,7 +35,7 @@ const endpoints = {
   usuario: {
     listar: { method: 'GET', url: '/api/Persona' },
     filtrar: { method: 'GET', url: '/api/Persona/filter' },
-    obtener: { method: 'GET', url: '/api/Usuario/{id}' },
+    obtener: { method: 'GET', url: '/api/Persona/ObtenerDatosPerfil/{id}' },
     crear: { method: 'POST', url: '/api/Usuario' },
     actualizar: { method: 'PUT', url: '/api/Persona/ActualizarPerfilUsuario/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Persona/{id}' },
@@ -43,7 +43,7 @@ const endpoints = {
   artista: {
     listar: { method: 'GET', url: '/api/Artista' },
     filtrar: { method: 'GET', url: '/api/Artista/filter' },
-    obtener: { method: 'GET', url: '/api/Artista/ObtenerDatosPerfil/{id}' },
+    obtener: { method: 'GET', url: '/api/Artista/{id}' },
     crear: { method: 'POST', url: '/api/Artista' },
     actualizar: { method: 'PUT', url: '/api/Artista/ActualizarPerfilArtista/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Artista/{id}' },
@@ -78,6 +78,7 @@ const endpoints = {
     actualizar: { method: 'PUT', url: '/api/Comentario/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Comentario/{id}' },
     filtrar: { method: 'GET', url: '/api/Comentario/filter' },
+    datos: { method: 'GET', url: '/api/Comentario/datos' },
   },
   exposicion:{
     listar: { method: 'GET', url: '/api/Exposicion' },
@@ -91,11 +92,23 @@ const endpoints = {
     listar: { method: 'GET', url: '/api/Obra' },
     buscar: { method: "GET", url: "/api/Obra/buscar"},
     obtener: { method: 'GET', url: '/api/Obra/{id}' },
-    crear: { method: 'POST', url: '/api/Obra' },
-    actualizar: { method: 'PUT', url: '/api/Obra/{id}' },
+    crear: { method: 'POST', url: '/api/Obra/CrearObra' },
+    actualizar: { method: 'PUT', url: '/api/Obra/EditarObra/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Obra/{id}' },
     filtrar: { method: 'GET', url: '/api/Obra/filter' },
     exposicion: {method: 'GET', url: '/api/Obra/exposicion/listar/{id }' },
+    SubirImagenObra: { method: 'POST', url: '/api/Obra/SubirImagenObra/{idObra}' },
+    ActualizarImagenObra: { method: 'PUT', url: '/api/Obra/ActualizarImagenObra/{idObra}' },
+    EliminarImagenObra: { method: 'DELETE', url:"/api/Obra/EliminarImagenObra/{idObra}"},
+    exposicionCrear: { method: 'POST', url:"/api/Obra/exposicion/crear"},
+  },
+  categoria: {
+    listar: { method: 'GET', url: '/api/Categoria' },
+    obtener: { method: 'GET', url: '/api/Categoria/{id}' },
+    crear: { method: 'POST', url: '/api/Categoria' },
+    actualizar: { method: 'PUT', url: '/api/Categoria/{id}' },
+    eliminar: { method: 'DELETE', url: '/api/Categoria/{id}' },
+    filtrar: { method: 'GET', url: '/api/Categoria/filter' },
   },
 }
 

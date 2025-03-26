@@ -10,8 +10,8 @@ const isSearching = ref(false);
 
 const fetchObras = async () => {
   try {
-    const response = await apiRequest("obra.listar");
-    img.value = response?.data ?? [];
+    const response = await apiRequest("obra.buscar",{populares:true});
+    img.value = response ?? [];
   } catch (error) {
     console.error("Error al obtener las obras:", error);
   }
@@ -23,6 +23,12 @@ const verDetalles = (id: string) => {
 };
 
 onMounted(fetchObras);
+
+const baseUrl = import.meta.env.VITE_APP_URL;
+
+const getImageUrl = (path: any) => {
+  return path ? `${baseUrl}${path}` : 'https://via.placeholder.com/400x300?text=Imagen+no+disponible';
+};
 
 const sections = computed(() => {
   const pattern = [2, 1, 2, 3];
@@ -42,9 +48,6 @@ const sections = computed(() => {
 
 <template>
   <div class="bg-[#EDE7DD] min-h-screen">
-    <h1 class="flex flex-col items-center py-10 px-6 text-5xl font-extrabold text-gray-900 tracking-wide">
-      GALERÍA
-    </h1>
 
     <div class="w-full mx-auto my-6">
       <Search @update:isSearching="isSearching = $event" />
@@ -58,16 +61,27 @@ const sections = computed(() => {
         'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 z-10': section.length === 3,
         'mt-12': sectionIndex > 0
       }">
-        <div v-for="(image, index) in section" :key="index"
-          class="relative group overflow-hidden rounded-xl p-4 cursor-pointer"
-          @click="verDetalles(image.id)">
-          <img :src="image.imagenUrl" :alt="image.titulo"
-            class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover transition-transform transform group-hover:scale-105">
-          <div
-            class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-            <span class="text-white text-lg font-semibold">{{ image.titulo }}</span>
-          </div>
+        <div v-for="work in section" :key="work.slug"
+        class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow">
+        <img :src="getImageUrl(work.imagenUrl) || 'https://via.placeholder.com/400x300?text=Imagen+no+disponible'" :alt="work.titulo"
+          class="w-full h-64 object-cover" />
+        <div class="p-6">
+          <h3 class="font-bold text-2xl text-gray-800 mb-2">{{ work.titulo }}</h3>
+          <p class="text-base text-gray-600 mb-4">
+            <span class="font-medium">Artista:</span> {{ work.artistaNombre || 'Desconocido' }}
+          </p>
+          <p class="text-[#C25500] font-bold text-xl">
+            {{ work.precio ? `$${work.precio.toLocaleString()}` : 'Precio no disponible' }}
+          </p>
+          <p v-if="work.descripcion" class="text-gray-500 text-base mt-3 line-clamp-3">
+            {{ work.descripcion }}
+          </p>
+          <button @click="verDetalles(work.slug)"
+            class="mt-4 bg-[#C25500] text-white font-semibold px-4 py-2 rounded-xl hover:bg-[#A04400] transition-shadow shadow-md hover:shadow-lg">
+            Ver más detalles
+          </button>
         </div>
+      </div>
       </div>
 
       <!-- Fondo decorativo -->

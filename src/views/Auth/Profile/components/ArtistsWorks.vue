@@ -4,6 +4,12 @@ import { useArtistProfileStore } from '@/stores/ArtistProfileStore'
 
 const artistStore = useArtistProfileStore()
 
+const baseUrl = import.meta.env.VITE_APP_URL;
+
+const getImageUrl = (path:any) => {
+  return `${baseUrl}${path}`;
+};
+
 onMounted(() => {
   artistStore.fetchObrasArtista()
 })
@@ -27,8 +33,10 @@ onMounted(() => {
         :key="obra.id"
         class="border rounded-lg overflow-hidden shadow-sm bg-white"
       >
+      <RouterLink :to="'/DetalleProducto/'+obra.slug">
+        
         <img
-          :src="obra.imagenUrl || 'https://via.placeholder.com/400x200?text=Sin+imagen'"
+          :src="getImageUrl(obra.imagenUrl) || 'https://via.placeholder.com/400x200?text=Sin+imagen'"
           alt="Imagen de la obra"
           class="w-full h-48 object-cover"
         />
@@ -40,6 +48,7 @@ onMounted(() => {
             Precio: ${{ obra.precio.toFixed(2) }}
           </p>
         </div>
+      </RouterLink>
       </div>
     </div>
   </div>
