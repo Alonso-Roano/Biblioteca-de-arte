@@ -79,6 +79,7 @@ const endpoints = {
     actualizar: { method: 'PUT', url: '/api/Comentario/{id}' },
     eliminar: { method: 'DELETE', url: '/api/Comentario/{id}' },
     filtrar: { method: 'GET', url: '/api/Comentario/filter' },
+    datos: { method: 'GET', url: '/api/Comentario/datos' },
   },
   exposicion:{
     listar: { method: 'GET', url: '/api/Exposicion' },

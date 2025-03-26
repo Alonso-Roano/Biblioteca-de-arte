@@ -100,8 +100,8 @@ onMounted(async () => {
 
 // Función para enviar el formulario
 const submitForm = handleSubmit((values) => {
-newExposicion.value = {...values, idArtista:artistaId.value};
-emit('save', values);
+  newExposicion.value = {...values, idArtista:artistaId.value};
+  emit('save', values);
 });
 </script>
 

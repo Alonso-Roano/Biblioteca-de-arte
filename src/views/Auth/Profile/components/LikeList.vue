@@ -5,9 +5,7 @@ import { useProfileStore } from '@/stores/ProfileStore'
 const profileStore = useProfileStore()
 
 onMounted(() => {
-  if (profileStore.userLikes.length === 0) {
-    profileStore.fetchUserLikes()
-  }
+  profileStore.fetchUserLikes()
 })
 </script>
 
@@ -23,14 +21,15 @@ onMounted(() => {
       <li
         v-for="(like, index) in profileStore.userLikes"
         :key="index"
-        class="p-4 bg-gray-100 rounded-lg shadow-sm"
       >
+      <RouterLink :to="'/DetalleProducto/'+like.slug" class="block p-4 bg-gray-100 rounded-lg shadow-sm">
         <h3 class="font-semibold text-[#F4811B] text-base">
           {{ like.titulo || 'Título desconocido' }}
         </h3>
         <p class="text-sm text-gray-700">
           {{ like.descripcion || 'Sin descripción.' }}
         </p>
+      </RouterLink>
       </li>
     </ul>
   </div>
