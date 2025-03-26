@@ -1,126 +1,146 @@
 <template>
-  <div class="flex flex-col min-h-[calc(100vh-160px)] w-full bg-[#EEE9DF]">
-    <div class="flex justify-center items-center flex-1 ">
-      <div class="flex flex-col lg:flex-row gap-10 w-full py-4 max-w-3xl items-center justify-center">
-        <div class="bg-white shadow-lg rounded-2xl p-6 max-w-md">
-          <h2 class="text-lg font-semibold mb-4 text-center">Crear Obra de Arte</h2>
-          <div class="mb-4">
-            <label for="titulo" class="block text-sm font-medium text-gray-700 mb-1">Título</label>
-            <input
-              type="text"
-              id="titulo"
-              v-model="titulo"
-              class="w-full px-3 py-2 border rounded-md"
-              placeholder="Ingresa el título"
-            />
-          </div>
-          <div class="mb-4">
-            <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-            <textarea
-              id="descripcion"
-              v-model="descripcion"
-              class="w-full px-3 py-2 border rounded-md"
-              placeholder="Ingresa la descripción"
-            ></textarea>
-          </div>
-
-          <!-- Dropdown para Categorías -->
-          <div class="mb-4">
-            <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-            <Dropdown
-              id="categoria"
-              v-model="selectedCategoria"
-              :options="ListCategories"
-              optionLabel="nombre"
-              placeholder="Selecciona una categoría"
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="precio" class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
-            <input
-              type="text"
-              id="precio"
-              v-model="precio"
-              class="w-full px-3 py-2 border rounded-md"
-              placeholder="Ingresa el precio"
-            />
-          </div>
-
-          <!-- Zona de carga de imagen -->
-          <div
-            class="border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-6 cursor-pointer hover:bg-gray-50 transition mb-4"
-            @click="$el.querySelector('input[type=file]').click()"
-          >
-            <img
-              src="https://static-00.iconduck.com/assets.00/upload-icon-2048x2048-eu9n5hco.png"
-              alt="Upload Icon"
-              class="w-8 h-8 mb-2 opacity-50"
-            />
-            <p class="text-sm text-gray-500 text-center">Arrastra o selecciona una imagen</p>
-            <input type="file" class="hidden" @change="handleFileUpload" accept="image/*, application/pdf" />
-          </div>
+  <div class="p-8 bg-gray-100 min-h-screen space-y-10 bg-[#EEE9DF]">
 
 
-          <button
-            @click="handleSubmit"
-            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 rounded-md transition"
-          >
-            Enviar
-          </button>
+    <div class="flex flex-col md:flex-row gap-8">
+
+
+      <div class="flex-1 bg-white p-6 rounded-lg shadow-md space-y-6">
+
+        <div>
+          <label class="block mb-2 font-medium text-gray-700">Cargar Nueva Obra</label>
+        <div
+  class="border-2 border-dashed border-gray-300 hover:border-blue-400 p-6 text-center rounded-md cursor-pointer transition-all flex flex-col justify-center items-center"
+  @dragover.prevent
+  @drop="handleFileDrop"
+  style="height: 300px;">
+  <img src="https://static-00.iconduck.com/assets.00/upload-icon-2048x2048-eu9n5hco.png"
+    alt="Upload Icon" class="w-12 h-12 mx-auto mb-2" />
+  <p class="text-sm text-gray-600 mb-2">Haz clic o arrastra una imagen</p>
+  <input type="file" @change="handleFileUpload" accept="image/*, application/pdf"
+    class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+    file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+</div>
+
         </div>
 
-        <!-- Sección de previsualización y análisis de colores -->
-        <div class="flex flex-col items-center lg:items-start justify-center flex-1 py-4 gap-6">
-          <img v-if="uploadedImage" :src="uploadedImage" alt="Uploaded Image" class="rounded-xl max-w-xs shadow-md" />
-          <div v-else class="flex gap-4">
-            <img src="/image/imageColor.png" class="max-w-xs w-full rounded-xl shadow-md" />
-            <img src="/image/imageColor2.png" class="max-w-xs w-full rounded-xl shadow-md" />
-          </div>
-          <div v-if="uploadedImage" class="w-full max-w-sm space-y-4">
-            <div v-for="(label, key) in colors" :key="key">
-              <label class="text-sm font-medium text-gray-700">{{ label }}:</label>
-              <div class="w-full h-4 bg-gray-200 rounded mt-1 overflow-hidden">
-                <div
-                  class="h-full transition-all duration-300"
-                  :class="{
-                    'bg-cyan-500': key === 'C',
-                    'bg-pink-500': key === 'M',
-                    'bg-yellow-400': key === 'Y',
-                    'bg-black': key === 'K'
-                  }"
-                  :style="{ width: colorPercentages[key] + '%' }"
-                ></div>
-              </div>
-              <p class="text-xs text-gray-500 mt-1">{{ colorPercentages[key].toFixed(2) }}%</p>
-            </div>
-          </div>
+        <div>
+          <label class="block mb-2 font-medium text-gray-700">Tipo de Papel</label>
+          <select v-model="selectedSize" @change="calculatePrice"
+            class="w-full p-3 border border-gray-300 rounded-md text-sm focus:ring focus:ring-orange-300">
+            <option v-for="(size, key) in paperSizes" :key="key" :value="key">
+              {{ key }} ({{ size }} cm²)
+            </option>
+          </select>
         </div>
+
+        <div>
+          <label class="block mb-2 font-medium text-gray-700">Tipo de Material</label>
+          <select v-model="selectedMaterial" @change="calculatePrice"
+            class="w-full p-3 border border-gray-300 rounded-md text-sm focus:ring focus:ring-orange-300">
+            <option v-for="(material, key) in materials" :key="key" :value="key">
+              {{ material }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+
+      <div class="flex-1 bg-white p-6 rounded-lg shadow-md space-y-6">
+        <div v-if="uploadedImage">
+          <h3 class="text-lg font-semibold mb-3">Imagen Seleccionada</h3>
+          <img :src="uploadedImage" alt="Imagen Cargada"
+            class="w-full h-[300px] object-contain rounded-md shadow-md" />
+        </div>
+        <canvas ref="canvas" style="display: none;"></canvas>
+
+<div v-if="uploadedImage">
+  <h3 class="text-lg font-semibold mb-3">Análisis de Colores</h3>
+  <div v-for="(label, key) in colors" :key="key" class="mb-4">
+    <label class="text-sm font-medium text-gray-700">{{ label }}:</label>
+    <div class="relative w-full h-4 bg-gray-200 rounded overflow-hidden mt-1">
+      <div class="absolute h-full top-0 left-0" :class="key"
+        :style="{ width: colorPercentages[key] + '%' }">
+      </div>
+      <span class="absolute right-2 top-0 text-xs text-gray-700">
+        {{ colorPercentages[key].toFixed(2) }}%
+      </span>
+    </div>
+  </div>
+
+
+  <div class="mt-6" v-if="totalPrice.value !== undefined">
+    <h4 class="text-lg font-semibold text-gray-700">Precio Estimado:</h4>
+    <div class="text-xl font-bold text-green-500">
+      {{ totalPrice.value.toFixed(2) }} USD
+    </div>
+  </div>
+
+  <div v-else class="mt-6 text-sm text-gray-500">
+    Calculando precio...
+  </div>
+</div>
+
       </div>
     </div>
-    <canvas ref="canvas" style="display: none;"></canvas>
+
+<div class="bg-white p-6 rounded-lg shadow-md">
+  <h3 class="text-lg font-semibold mb-4">Tus Obras</h3>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div v-for="(img, index) in localImages" :key="index"
+      @click="selectImage(img)"
+      class="border-2 rounded-md overflow-hidden transition-all cursor-pointer hover:shadow-lg"
+      :class="uploadedImage === img ? 'border-blue-500' : 'border-gray-300'">
+      <img :src="img" alt="Obra del artista" class="w-full h-40 object-cover" />
+    </div>
+  </div>
+</div>
+
+
   </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useToast } from 'primevue/usetoast';
-import { createObra, newObra } from '@/composables/obraFunctions.ts';
-import { useAuthStore } from '@/stores/authStore.ts'
-import Dropdown from 'primevue/dropdown';
-import { fetchCategorias2, ListCategories } from '@/composables/categoriaFunctions.ts';
+<script setup>
+import { ref, computed } from 'vue';
+import imageColor from '@/assets/images/imageColor.png';
+import imageColor2 from '@/assets/images/imageColor2.png';
 
+const localImages = [
+  imageColor,
+  imageColor2,
+];
 
-const authStore = useAuthStore()
-const IdArtista = authStore.IdArtista as string | number
-const toast = useToast();
-const uploadedImage = ref<string | null>(null);
-const canvas = ref<HTMLCanvasElement | null>(null);
+const selectImage = (img) => {
+  uploadedImage.value = img;
+  processImage(img);
+};
 
-const titulo = ref('');
-const descripcion = ref('');
-const precio = ref(0);
-const selectedCategoria = ref<any>(null);
+const paperSizes = {
+  carta: 601.44,
+  legal: 767.76,
+  tabloide: 1204.08,
+  bond: 601.44,
+  oficio: 712.8,
+  A4: 623.7,
+  A5: 310.8,
+  B5: 440,
+  C5: 370.38,
+  half_letter: 302.4,
+  executive: 491.88,
+  ledger: 1204.08,
+  index_card: 96.32,
+  postcard: 155.04,
+  greeting_card: 151.2,
+  etiqueta: 45
+};
+
+const materials = {
+  pvc: 'PVC',
+  canvas: 'Lona',
+  photo: 'Fotográfico',
+  paper: 'Papel'
+};
 
 const colors = {
   C: 'Cyan',
@@ -129,21 +149,66 @@ const colors = {
   K: 'Black'
 };
 
+const selectedSize = ref('carta');
+const selectedMaterial = ref('photo');
+const quantity = ref(1);
 const colorPercentages = ref({ C: 0, M: 0, Y: 0, K: 0 });
+const canvas = ref(null);
+const uploadedImage = ref(null);
 
-onMounted(() => {
-  fetchCategorias2();
+const materialPrices = {
+  pvc: 15,
+  canvas: 20,
+  photo: 25,
+  paper: 10
+};
+
+const totalPrice = computed(() => {
+  const paperArea = paperSizes[selectedSize.value];
+  const materialPrice = materialPrices[selectedMaterial.value];
+
+  if (!paperArea || !materialPrice) {
+    return 0;
+  }
+
+  const { C, M, Y, K } = colorPercentages.value;
+    const colorFactor = ((C / 100) + (M / 100) + (Y / 100) + (K / 100));
+
+  if (isNaN(colorFactor)) {
+    return 0;
+  }
+
+const unitPrice = materialPrice * (paperArea / 45) * colorFactor;
+
+  return unitPrice * quantity.value;
 });
 
-const handleFileUpload = (event: Event) => {
-  const input = event.target as HTMLInputElement;
+const calculatePrice = () => {
+  console.log("Selected Size:", selectedSize.value);
+  console.log("Selected Material:", selectedMaterial.value);
+  console.log("Quantity:", quantity.value);
+  console.log("Color Percentages:", colorPercentages.value);
+};
+
+const handleFileUpload = (event) => {
+  const input = event.target;
   if (!input.files || input.files.length === 0) return;
 
   const file = input.files[0];
   uploadedImage.value = URL.createObjectURL(file);
+  processImage(file);
+};
 
-  newObra.value.imagen = file;
+const handleFileDrop = (event) => {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file) {
+    uploadedImage.value = URL.createObjectURL(file);
+    processImage(file);
+  }
+};
 
+const processImage = (file) => {
   const img = new Image();
   img.src = uploadedImage.value;
   img.onload = () => {
@@ -160,6 +225,8 @@ const handleFileUpload = (event: Event) => {
     const totalPixels = canvas.value.width * canvas.value.height;
 
     let totalC = 0, totalM = 0, totalY = 0, totalK = 0;
+
+    // Calculando los valores de color CMYK
     for (let i = 0; i < data.length; i += 4) {
       const [c, m, y, k] = rgbToCmyk(data[i], data[i + 1], data[i + 2]);
       totalC += c;
@@ -168,16 +235,26 @@ const handleFileUpload = (event: Event) => {
       totalK += k;
     }
 
-    colorPercentages.value = {
+    const percentages = {
       C: (totalC / totalPixels) * 100,
       M: (totalM / totalPixels) * 100,
       Y: (totalY / totalPixels) * 100,
       K: (totalK / totalPixels) * 100
     };
+
+    console.log("Calculated Color Percentages:", percentages);
+
+    // Se actualiza los porcentajes de color en el cambio
+    colorPercentages.value = percentages;
+
+    // Se calcula el precio usando los colores calculados al cambiar
+    calculatePrice();
   };
 };
 
-const rgbToCmyk = (r: number, g: number, b: number): number[] => {
+
+
+const rgbToCmyk = (r, g, b) => {
   const rf = r / 255, gf = g / 255, bf = b / 255;
   const k = 1 - Math.max(rf, gf, bf);
   return [
@@ -187,20 +264,78 @@ const rgbToCmyk = (r: number, g: number, b: number): number[] => {
     k
   ];
 };
-
-const handleSubmit = async () => {
-  newObra.value.isDeleted = false;
-  newObra.value.titulo = titulo.value;
-  newObra.value.descripcion = descripcion.value;
-  newObra.value.precio = precio.value;
-  newObra.value.artistaId = IdArtista;
-  newObra.value.categoriaIds = selectedCategoria.value ? [selectedCategoria.value.id] : [];
-  newObra.value.imagenUrl = uploadedImage.value || '';
-
-  const obraId = await createObra(toast);
-  if (obraId) {
-    console.log("Obra creada con ID:", obraId);
-    // Aquí podrías redirigir a otra página o limpiar el formulario
-  }
-};
 </script>
+
+
+
+<style scoped>
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container {
+  width: 100%;
+  height: 300px;
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+.upload-area {
+  border: 2px dashed #F4811B;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 25px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+.C { background-color: cyan; }
+.M { background-color: magenta; }
+.Y { background-color: yellow; }
+.K { background-color: black; }
+
+
+.containColor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 5%;
+  gap: 20px;
+}
+
+.containColor img {
+  border-radius: 1rem !important;
+}
+
+.img-origin img {
+  width: 50%;
+}
+
+.img-origin {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+</style>
