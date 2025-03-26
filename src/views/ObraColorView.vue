@@ -70,16 +70,17 @@
   </div>
 
 
-  <div class="mt-6" v-if="totalPrice.value !== undefined">
-    <h4 class="text-lg font-semibold text-gray-700">Precio Estimado:</h4>
-    <div class="text-xl font-bold text-green-500">
-      {{ totalPrice.value.toFixed(2) }} USD
-    </div>
-  </div>
+<div class="mt-6" v-if="uploadedImage">
+  <h4 class="text-lg font-semibold text-gray-700">Precio Estimado:</h4>
+<div v-if="totalPrice !== undefined">
+  {{ totalPrice.toFixed(2) }} USD
+</div>
 
-  <div v-else class="mt-6 text-sm text-gray-500">
+  <div v-else class="text-sm text-gray-500">
     Calculando precio...
   </div>
+</div>
+
 </div>
  
       </div>
@@ -166,22 +167,20 @@ const materialPrices = {
 const totalPrice = computed(() => {
   const paperArea = paperSizes[selectedSize.value];
   const materialPrice = materialPrices[selectedMaterial.value];
-  
-  if (!paperArea || !materialPrice) {
-    return 0; 
-  }
-  
-  const { C, M, Y, K } = colorPercentages.value;
-    const colorFactor = ((C / 100) + (M / 100) + (Y / 100) + (K / 100));
-  
-  if (isNaN(colorFactor)) {
-    return 0; 
-  }
-  
-const unitPrice = materialPrice * (paperArea / 45) * colorFactor; 
 
+  const { C, M, Y, K } = colorPercentages.value;
+  const colorFactor = ((C / 100) + (M / 100) + (Y / 100) + (K / 100));
+
+  const imageLoaded = uploadedImage.value !== null;
+
+  if (!imageLoaded || !paperArea || !materialPrice || isNaN(colorFactor) || colorFactor === 0) {
+    return undefined; 
+  }
+
+  const unitPrice = materialPrice * (paperArea / 45) * colorFactor;
   return unitPrice * quantity.value;
 });
+
 
 const calculatePrice = () => {
   console.log("Selected Size:", selectedSize.value);
@@ -226,7 +225,7 @@ const processImage = (file) => {
 
     let totalC = 0, totalM = 0, totalY = 0, totalK = 0;
 
-    // Calculando los valores de color CMYK
+    // Se calcula los valores de color CMYK
     for (let i = 0; i < data.length; i += 4) {
       const [c, m, y, k] = rgbToCmyk(data[i], data[i + 1], data[i + 2]);
       totalC += c;

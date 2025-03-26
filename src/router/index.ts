@@ -39,8 +39,8 @@ const router = createRouter({
     },
     {
       path: '/ObraColor',
-      name: 'ObraColor',
-      meta: { menu: true, requiresAuth: true, title: 'ObraColor', roles: ['Artista'] },
+      name: 'Calcular Color',
+      meta: { menu: true, requiresAuth: true, title: 'Calcular Color', roles: ['Artista'] },
       component: ObraColor,
     },
     {
