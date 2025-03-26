@@ -21,6 +21,7 @@ import DashboardLogError from '@/views/Dashboard/DashboardLogError.vue'
 import DashboardExposicion from '@/views/Dashboard/DashboardExposicion.vue'
 import DashboardObra from '@/views/Dashboard/DashboardObra.vue'
 import DashboardComentario from '@/views/Dashboard/DashboardComentario.vue'
+import ObraColor from '@/views/ObraColorView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,12 @@ const router = createRouter({
       name: 'Exposiciones',
       meta: { menu: true, title: 'Exposiciones' },
       component: ExposureView
+    },
+    {
+      path: '/ObraColor',
+      name: 'ObraColor',
+      meta: { menu: true, requiresAuth: true, title: 'ObraColor', roles: ['Artista'] },
+      component: ObraColor,
     },
     {
       path: '/login',
