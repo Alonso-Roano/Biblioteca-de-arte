@@ -4,42 +4,46 @@ import { apiRequest } from '@/api/apiClient'
 export const Obras = ref([])
 export const ObraImage = ref({imagen:""})
 export const IdObraDelete = ref<string | number>("")
-export const newObra = ref({id: "", titulo: "", descripcion: "", precio: "", artistaId: "", categoriaIds: "", exposicionIds:[], imagen: ""})
+export const newObra = ref({id: "", titulo: "", descripcion: "", precio: "", artistaId: "", categoriaIds: [], exposicionIds:[], imagen: ""})
 export const ObraEdit = ref({ id:0, ImagenUrl:"", source: "", message: "", stackTrace: ""})
 export const ObraView = ref({id:"", source: "", message: "", stackTrace: ""})
 
-export const fetchObras = async (params:any = null) => {
+export const fetchObras = async () => {
   try {
-    const response = <any> await apiRequest("obra.filtrar", params)
-    Obras.value = response.data
+    const response = <any> await apiRequest("obra.filtrar")
+    Obras.value = response.data.items
   } catch (error) {
     console.error("Error fetching obras:", error)
     throw error
   }
 }
 
-export const createObra = async ( toast:any) => {
-  if (!newObra.value.titulo || !newObra.value.descripcion || !newObra.value.precio || 
+export const createObra = async (toast: any, newObra: any) => {
+  if (!newObra.value.titulo || !newObra.value.descripcion || !newObra.value.precio ||
       !newObra.value.artistaId || !newObra.value.categoriaIds?.length) {
-    toast.add({ 
-      severity: 'warn', 
-      summary: 'Campos incompletos', 
-      detail: 'Todos los campos son obligatorios', 
-      life: 3000 
+    toast.add({
+      severity: 'warn',
+      summary: 'Campos incompletos',
+      detail: 'Todos los campos son obligatorios',
+      life: 3000
     })
     return null
   }
+  console.log("obraFuntion")
+  console.log(newObra)
+  console.log(toast)
+  console.log("--")
 
   try {
-    const obraSend = {...newObra.value, ImagenUrl:"url"}
+    const obraSend = {...newObra.value, imagenUrl:"url"}
     const response = <any> await apiRequest("obra.crear", {}, obraSend)
     console.log(response)
     if (response) {
-      toast.add({ 
-        severity: 'success', 
-        summary: 'Éxito', 
-        detail: 'Obra creada correctamente', 
-        life: 3000 
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Obra creada correctamente',
+        life: 3000
       })
       if (newObra.value.imagen) {
         await uploadObraImage(response, newObra.value.imagen)
@@ -121,7 +125,7 @@ export const addExposicionesToObra = async (obraId: string | number, exposicione
   }
 
   try {
-    const requests = exposicionesIds.map((idExposicion:any) => 
+    const requests = exposicionesIds.map((idExposicion:any) =>
       apiRequest("obra.exposicionCrear", { idObra: obraId, idExposicion })
     );
 
@@ -159,7 +163,7 @@ export const updateObra = async (toast: any) => {
       toast.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario Editado correctamente', life: 3000 })
     }
     await fetchObras({page:1,limit:5});
-    return true 
+    return true
   } else {
     toast.add({ severity: 'warn', summary: 'Campos incompletos', detail: 'Todos los campos son obligatorios', life: 3000 })
     return false

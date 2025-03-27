@@ -7,14 +7,18 @@ export const newCategoria = ref({ id:"", nombre: "", descripcionCategoria: "", n
 export const CategoriaEdit = ref({ id:0, nombre: "", descripcionCategoria: "", nombreCorto:""})
 export const CategoriaView = ref({id:"", nombre: "", descripcionCategoria: "", nombreCorto:""})
 
-export const fetchCategorias = async (params:any = null) => {
+
+export const fetchCategorias = async () => {
   try {
-    const Categoriaa = <any> await apiRequest("categoria.filtrar",params)
-    Categorias.value = Categoriaa.data
+    const Categoria = <any> await apiRequest("categoria.filtrar")
+    Categorias.value = Categoria.data.items
+    // console.log(Categorias.value);
+
   } catch (error) {
     console.log(error)
   }
 }
+
 
 export const createCategoria = async (toast: any) => {
   if (!newCategoria.value.nombre || !newCategoria.value.descripcionCategoria || !newCategoria.value.nombreCorto) {
@@ -51,7 +55,7 @@ export const updateCategoria = async (toast: any) => {
       toast.add({ severity: 'success', summary: 'Éxito', detail: 'Categoria Editado correctamente', life: 3000 })
     }
     await fetchCategorias({page:1,limit:5});
-    return true 
+    return true
   } else {
     toast.add({ severity: 'warn', summary: 'Campos incompletos', detail: 'Todos los campos son obligatorios', life: 3000 })
     return false
@@ -72,7 +76,7 @@ export const removeCategoria = async (toast: any) => {
       toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la Categoria', life: 3000 })
     }
     await fetchCategorias({page:1,limit:5});
-    return true 
+    return true
   } catch (error) {
     toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la Categoriaa', life: 3000 })
     return false
