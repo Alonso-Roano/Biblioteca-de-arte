@@ -53,7 +53,7 @@ const router = createRouter({
     {
       path:'/AddObra',
       name:'Agregar Obra',
-      meta: { menu: true, requiresAuth: true, title: 'Agregar Obra', roles: ['Artista'] },
+      meta: { menu: true, requiresAuth: true, requiresArtist:true, title: 'Agregar Obra', roles: ['Artista'] },
       component: AddObraView
     },
     {
@@ -77,7 +77,7 @@ const router = createRouter({
     {
       path: '/myprofile',
       name: 'myprofile',
-      meta: { menu: true, requiresAuth: true, requiresUser: true, title: 'Mi perfil', roles: ['Usuario','Admin'] },
+      meta: { menu: true, requiresAuth: true, title: 'Mi perfil', roles: ['Usuario','Admin'] },
       component: ProfileView,
     },
     {
@@ -169,7 +169,7 @@ router.beforeEach((to, from, next) => {
     next({ name: 'login' })
   } else if (to.meta.requiresAdmin && authStore.user?.rol !== 'Admin') {
     next({ name: 'home' })
-  } else if (to.meta.requiresUser && authStore.user?.rol !== 'Usuario') {
+  } else if (to.meta.requiresUser && (authStore.user?.rol !== 'Usuario')) {
     next({ name: 'home' })
   } else if (to.meta.requiresArtist && authStore.user?.rol !== 'Artista') {
     next({ name: 'home' })

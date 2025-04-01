@@ -48,7 +48,7 @@ const mySections = [
 <template>
   <div class="relative w-full bg-[#EEE9DF]">
     <section class="flex flex-col items-center justify-center py-5">
-      <h1 class="text-4xl text-center my-2 font-montserrat">Bienvenido a Galeria</h1>
+      <h1 class="text-4xl text-center my-2 font-montserrat">Bienvenido a tu Galeria de arte</h1>
       <div class="relative pt-4 px-3 md:px-0 md:w-[80%] mx-auto">
         <img
           :src="Lake"

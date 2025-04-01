@@ -171,7 +171,8 @@ onMounted(async () => {
           @click="toggleMeGusta" 
           class="absolute top-4 right-12 text-3xl transition-transform rounded-full transform active:scale-90 "
         >
-          <Icon icon="mdi:heart" class="text-red-500" />
+        <Icon :icon="leGusta ? 'mdi:heart' : 'mdi:heart-outline'" 
+        :class="leGusta ? 'text-red-500' : 'text-red-500'" />
         </button>
         <button v-else 
           class="absolute top-4 right-12 text-3xl transition-transform rounded-full transform "
