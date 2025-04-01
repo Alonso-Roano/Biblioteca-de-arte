@@ -1,8 +1,16 @@
 <template>
   <div class="flex flex-col min-h-[calc(100vh-160px)] w-full bg-[#EEE9DF]">
+    <h1 class="flex flex-col items-center py-2 px-6 text-5xl font-extrabold text-gray-900 tracking-wide">
+        Agregar nueva obra
+        <span class="text-xl font-normal mt-2 text-gray-600">
+          Agrega una nueva obra a tu catalogo
+        </span>
+      </h1>
+    <div class="flex flex-col md:flex-row gap-8"></div>
     <div class="flex justify-center items-center flex-1 ">
+      
       <div class="flex flex-col lg:flex-row gap-10 w-full py-4 max-w-3xl items-center justify-center">
-        <div class="bg-white shadow-lg rounded-2xl p-6 max-w-md">
+        <div class="bg-white shadow-lg rounded-2xl p-6 w-[300px]">
           <h2 class="text-lg font-semibold mb-4 text-center">Crear Obra de Arte</h2>
           <div class="mb-4">
             <label for="titulo" class="block text-sm font-medium text-gray-700 mb-1">Título</label>

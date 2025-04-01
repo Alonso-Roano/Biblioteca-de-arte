@@ -1,7 +1,12 @@
 <template>
-  <div class="p-8 bg-gray-100 min-h-screen space-y-10 bg-[#EEE9DF]">
+  <div class="p-8 bg-[#f5edd9] min-h-screen space-y-10 ">
 
-
+    <h1 class="flex flex-col items-center py-2 px-6 text-5xl font-extrabold text-gray-900 tracking-wide">
+        Composicion de color
+        <span class="text-xl font-normal mt-2 text-gray-600">
+          Verifica cuanta tinta usan tus pinturas
+        </span>
+      </h1>
     <div class="flex flex-col md:flex-row gap-8">
 
 
@@ -84,18 +89,6 @@
 
       </div>
     </div>
-
-<div class="bg-white p-6 rounded-lg shadow-md">
-  <h3 class="text-lg font-semibold mb-4">Tus Obras</h3>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div v-for="(img, index) in localImages" :key="index"
-      @click="selectImage(img)"
-      class="border-2 rounded-md overflow-hidden transition-all cursor-pointer hover:shadow-lg"
-      :class="uploadedImage === img ? 'border-blue-500' : 'border-gray-300'">
-      <img :src="img" alt="Obra del artista" class="w-full h-40 object-cover" />
-    </div>
-  </div>
-</div>
 
 
   </div>

@@ -99,6 +99,11 @@ const volverAExposiciones = () => {
 onMounted(() => {
   fetchExposiciones();
 });
+const baseUrl = import.meta.env.VITE_APP_URL;
+
+const getImageUrl = (path: any) => {
+  return path ? `${baseUrl}${path}` : 'https://via.placeholder.com/400x300?text=Imagen+no+disponible';
+};
 
 // Computed para organizar las obras en secciones visuales
 const sections = computed(() => {
@@ -184,7 +189,7 @@ const nombreExposicionSeleccionada = computed(() => {
           <div class="p-6">
             <h3 class="text-gray-900 text-2xl font-extrabold mb-2">{{ exposicion.nombre }}</h3>
             <div class="flex items-center gap-3 text-gray-600 text-sm mb-2">
-              <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 text-[#C25500]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8 16a4 4 0 100-8 4 4 0 000 8zM2 8a6 6 0 1112 0A6 6 0 012 8zm10.93 5.93A5.97 5.97 0 0016 8a6 6 0 10-12 0 5.97 5.97 0 003.07 5.93l-.57 3.57A1 1 0 008 18h4a1 1 0 00.97-.76l.57-3.57z"></path>
               </svg>
               <span class="font-medium">{{ exposicion.obras }} obras</span>
@@ -196,7 +201,7 @@ const nombreExposicionSeleccionada = computed(() => {
             </p>
           </div>
 
-          <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-700 transition-opacity duration-300 opacity-75 group-hover:opacity-100"></div>
+          <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r bg-[#C25500] transition-opacity duration-300 opacity-75 group-hover:opacity-100"></div>
         </div>
       </div>
 
@@ -221,26 +226,24 @@ const nombreExposicionSeleccionada = computed(() => {
             'grid-cols-1 max-w-2xl': section.length === 1,
             'mt-12': sectionIndex > 0
           }">
+          
             <div v-for="(artwork, index) in section" :key="index"
                  class="relative group overflow-hidden rounded-2xl cursor-pointer bg-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
 
+                 <RouterLink :to="'/DetalleProducto/'+artwork.slug">
               <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden">
-                <img :src="artwork.imagenUrl || '/placeholder-artwork.jpg'" :alt="artwork.titulo"
+                <img :src="getImageUrl(artwork.imagenUrl) || '/placeholder-artwork.jpg'" :alt="artwork.titulo"
                      class="w-full h-[400px] sm:h-[500px] md:h-[550px] object-cover transition-transform duration-500 group-hover:scale-110">
               </div>
 
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 flex flex-col justify-end p-6 transition-opacity duration-300">
                 <div class="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
                   <h3 class="text-white text-2xl font-extrabold mb-1">{{ artwork.titulo }}</h3>
-                  <p class="text-gray-300 text-lg mb-2">Por {{ artwork.artista }}</p>
                   <div class="flex items-center justify-between">
                     <span class="text-orange-300 font-semibold text-xl">{{ artwork.precio }} €</span>
                     <span v-if="artwork.disponibilidad"
                           class="bg-green-500 text-white text-sm px-3 py-1 rounded-full font-medium">
                       Disponible
-                    </span>
-                    <span v-else class="bg-red-500 text-white text-sm px-3 py-1 rounded-full font-medium">
-                      Vendido
                     </span>
                   </div>
                 </div>
@@ -259,6 +262,7 @@ const nombreExposicionSeleccionada = computed(() => {
                   <span>{{ artwork.añoCreacion }}</span>
                 </div>
               </div>
+            </RouterLink>
             </div>
           </div>
         </div>
