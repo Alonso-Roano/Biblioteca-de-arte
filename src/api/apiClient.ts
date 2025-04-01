@@ -36,6 +36,20 @@ apiClient.interceptors.request.use(
     }
 );
 
+const logError = async (error: any) => {
+    try {
+        await apiClient.post("/api/logError", {
+            id: 0,
+            isDeleted: true,
+            source: error.config?.url || "unknown",
+            message: error.message,
+            stackTrace: error.stack || "No stack trace",
+        });
+    } catch (logError) {
+        console.error("Error logging failed:", logError);
+    }
+};
+
 apiClient.interceptors.response.use(
     (response) => {
         return response;
@@ -119,6 +133,7 @@ export const apiRequest = async <T>(
         return response.data;
     } catch (error: any) {
         console.error("API Error:", error.response?.data || error.message);
+        await logError(error);
         throw error;
     }
 };
