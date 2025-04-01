@@ -1,5 +1,5 @@
 {
-  "name": "babel-front",
+  "name": "galeria-front",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@primeuix/themes": "^1.0.0",
     "@primevue/core": "^4.2.5",
     "@primevue/themes": "^4.2.5",
@@ -20,6 +21,8 @@
     "axios": "^1.7.9",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
+    "lodash-es": "^4.17.21",
+    "nsfwjs": "^4.2.1",
     "pinia": "^3.0.1",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.1",

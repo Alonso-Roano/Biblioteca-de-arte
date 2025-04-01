@@ -3,7 +3,6 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import type { AxiosResponse } from "axios";
 import type User from "../interfaces/User";
-import endpoints from "@/api/endpoints";
 import { apiRequest } from "@/api/apiClient";
 import Cookies from "js-cookie";
 
@@ -12,6 +11,8 @@ interface AuthState {
   token: string | null;
   refreshToken: string | null;
   user: User | null;
+  Idpersona: number | null;
+  IdArtista: number | null;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -20,6 +21,8 @@ export const useAuthStore = defineStore("auth", {
     token: Cookies.get("token") || null,
     refreshToken: Cookies.get("refreshToken") || null,
     user: null,
+    Idpersona: null,
+    IdArtista: null,
   }),
 
   actions: {
@@ -47,16 +50,21 @@ export const useAuthStore = defineStore("auth", {
 
     setUserFromToken(token: string) {
       const decoded: any = jwtDecode(token);
+
+      const rol = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
       this.user = {
         id: decoded.Id,
         nombre: decoded.Nombre,
         email: decoded.Email,
         alias: decoded.Alias,
-        rol: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+        rol,
         username: decoded.Alias,
         password:"",
         perfil: decoded.Image,
       };
+      this.Idpersona = decoded.idUsuario ? parseInt(decoded.idUsuario, 10) : null;
+      this.IdArtista = decoded.idArtista ? parseInt(decoded.idArtista, 10) : null;
     },
 
     async login(email: string, password: string) {
@@ -84,15 +92,13 @@ export const useAuthStore = defineStore("auth", {
     setTokens(token: string, refreshToken: string) {
       this.token = token;
       this.refreshToken = refreshToken;
-      localStorage.setItem("refreshToken", refreshToken);
       Cookies.set("token", token, { secure: true, sameSite: "Strict" });
       Cookies.set("refreshToken", refreshToken, { secure: true, sameSite: "Strict" });
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     },
 
     async refreshTokenAsync() {
-      console.log(localStorage.getItem("refreshToken"))
-      const sendToken = localStorage.getItem("refreshToken");
+      const sendToken = Cookies.get("refreshToken");
       try {
         const response: AxiosResponse = await axios.post(import.meta.env.VITE_APP_URL+"api/Auth/refresh", {
           token: sendToken,
@@ -102,9 +108,11 @@ export const useAuthStore = defineStore("auth", {
           this.setUserFromToken(response.data.accessToken);
         } else {
           console.error("Error al refrescar el token, respuesta incompleta.");
+          this.logout();
         }
       } catch (error) {
         console.error("Error refrescando token", error);
+        this.logout()
       }
     },
 
@@ -114,7 +122,6 @@ export const useAuthStore = defineStore("auth", {
         this.refreshToken = null;
         this.user = null;
         Cookies.remove("token");
-        localStorage.removeItem("refreshToken")
         Cookies.remove("refreshToken");
         delete axios.defaults.headers.common["Authorization"];
         this.status = "unauthorized";
@@ -161,6 +168,16 @@ export const useAuthStore = defineStore("auth", {
     async register(nombres: string, apellidos: string, email: string, password: string, confirmPassword:string, artista:boolean = false ) {
       this.status = "pending";
       try {
+        console.log(
+          {
+            id:"0",
+          email,
+          nombres,
+          apellidos,
+          password,
+          confirmPassword
+        });
+
         const response: any = await apiRequest(artista ? "auth.registerArtist":"auth.registerUser", {}, {
           id:"0",
           email,

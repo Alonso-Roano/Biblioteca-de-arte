@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore.ts';
 import { Icon } from "@iconify/vue";
 import Cristo from '@/assets/images/cristoredentor.webp'
 import { useToast } from 'primevue/usetoast'
+import * as yup from 'yup'
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -24,15 +25,24 @@ const passwordError = ref('')
 const confirmPasswordError = ref('')
 const toast = useToast();
 
-const validateEmail = (email: string): boolean => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return re.test(email)
-}
-
-const validatePassword = (password: string): boolean => {
-  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{10,}$/
-  return re.test(password)
-}
+const registerSchema = yup.object({
+  nombres: yup.string().trim().required('El nombre es obligatorio'),
+  apellidos: yup.string().trim().required('El apellido es obligatorio'),
+  email: yup.string().trim().email('Correo no válido').required('El correo es obligatorio'),
+  password: yup
+    .string()
+    .trim()
+    .required('La contraseña es obligatoria')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{10,}$/,
+      'Debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un carácter especial.'
+    ),
+  confirmPassword: yup
+    .string()
+    .trim()
+    .required('La confirmación es obligatoria')
+    .oneOf([yup.ref('password')], 'Las contraseñas no coinciden'),
+})
 
 const onSubmit = async () => {
   nombresError.value = ''
@@ -41,47 +51,28 @@ const onSubmit = async () => {
   passwordError.value = ''
   confirmPasswordError.value = ''
 
-  let valid = true
-
-  if (!nombres.value.trim()) {
-    nombresError.value = 'El nombre es obligatorio.'
-    valid = false
-  }
-
-  if (!apellidos.value.trim()) {
-    apellidosError.value = 'El apellido es obligatorio.'
-    valid = false
-  }
-
-  if (!email.value || !validateEmail(email.value)) {
-    emailError.value = 'Por favor ingresa un correo electrónico válido.'
-    valid = false
-  }
-
-  if (!password.value || !validatePassword(password.value)) {
-    passwordError.value =
-      'Debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un carácter especial.'
-    valid = false
-  }
-
-  if (confirmPassword.value !== password.value) {
-    confirmPasswordError.value = 'Las contraseñas no coinciden.'
-    valid = false
-  }
-
-  if (!valid) return
-
   try {
+    const formData = await registerSchema.validate(
+      {
+        nombres: nombres.value,
+        apellidos: apellidos.value,
+        email: email.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value,
+      },
+      { abortEarly: false }
+    )
+
     await authStore.register(
-      nombres.value,
-      apellidos.value,
-      email.value,
-      password.value,
-      confirmPassword.value,
+      formData.nombres,
+      formData.apellidos,
+      formData.email,
+      formData.password,
+      formData.confirmPassword,
       artista.value
     )
-    errorMessage.value = null
 
+    errorMessage.value = null
     toast.add({
       severity: 'success',
       summary: 'Registro exitoso',
@@ -92,16 +83,28 @@ const onSubmit = async () => {
     setTimeout(() => {
       router.push('/login')
     }, 2000)
-  } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Ocurrió un error inesperado.'
-    toast.add({
-      severity: 'error',
-      summary: 'Error al registrar',
-      detail: errorMessage.value,
-      life: 4000
-    })
+
+  } catch (err: any) {
+    if (err.name === 'ValidationError') {
+      err.inner.forEach((e: any) => {
+        if (e.path === 'nombres') nombresError.value = e.message
+        if (e.path === 'apellidos') apellidosError.value = e.message
+        if (e.path === 'email') emailError.value = e.message
+        if (e.path === 'password') passwordError.value = e.message
+        if (e.path === 'confirmPassword') confirmPasswordError.value = e.message
+      })
+    } else {
+      errorMessage.value = 'Ocurrió un error inesperado.'
+      toast.add({
+        severity: 'error',
+        summary: 'Error al registrar',
+        detail: errorMessage.value,
+        life: 4000
+      })
+    }
   }
 }
+
 
 </script>
 

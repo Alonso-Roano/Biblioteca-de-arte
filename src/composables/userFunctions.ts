@@ -1,7 +1,10 @@
 import { ref } from 'vue'
 import { apiRequest } from '@/api/apiClient'
+import Cookies from 'js-cookie'
+import { jwtDecode } from 'jwt-decode'
 
 export const Users = ref([])
+export const IdUserAppDelete = ref<string | number>("")
 export const IdUserDelete = ref<string | number>("")
 export const newUser = ref({ nombres: '', email: '', apellidos: '', password: '', confirmPassword:'' })
 export const userEdit = ref({ id: '', nombres: '', apellidos: '',edad:'', contraseña: '', idApplicationUser:'' })
@@ -59,11 +62,19 @@ export const updateUser = async (toast: any) => {
   }
 }
 
-export const deleteUser = (id: any) => {
-  IdUserDelete.value = id
+export const deleteUser = (user: any) => {
+  IdUserAppDelete.value = user.idApplicationUser;
+  IdUserDelete.value = user.id;
 }
 
 export const removeUser = async (toast: any) => {
+  const token = <any> Cookies.get("token");
+  const decoded: any = jwtDecode(token);
+
+  if(IdUserAppDelete.value ==  decoded.Id){
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el usuario', life: 3000 })
+    return false;
+  }
   try {
     const idUser = IdUserDelete.value
     const response = <any> await apiRequest("usuario.eliminar", { id: idUser })
